@@ -40,8 +40,13 @@ with st.sidebar:
     st.session_state["dark_mode"] = st.toggle("🌙 Dark Mode", value=st.session_state["dark_mode"])
 
 # Inject dynamic CSS based on mode
-st.markdown(f"""
+# Sidebar - Settings
+with st.sidebar:
+    st.markdown("## ⚙️ Settings")
+    st.session_state["dark_mode"] = st.toggle("🌙 Dark Mode", value=st.session_state["dark_mode"])
 
+# Inject dynamic CSS based on mode
+st.markdown(f"""
 <style>
 /* Main App Container Background */
 [data-testid="stAppViewContainer"] {{
@@ -51,7 +56,7 @@ st.markdown(f"""
 
 /* Sidebar Background and Font */
 [data-testid="stSidebar"] {{
-    background-color: {'#1a202c' if st.session_state["dark_mode"] else '#f9fafb'};
+    background-color: {('#3a4354' if st.session_state["dark_mode"] else '#e9d8fd')}; /* Changed Sidebar Background */
     color: {'#edf2f7' if st.session_state["dark_mode"] else '#1a202c'};
 }}
 
