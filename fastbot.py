@@ -1,6 +1,3 @@
-# Install needed libraries:
-# pip install streamlit pandas sentence-transformers faiss-cpu requests
-
 import csv
 import re
 import multiprocessing
@@ -172,8 +169,16 @@ p, li, span, div {{
 # --- Configuration ---
 CSV_FILE = 'cleaned_dataset.csv'
 TXT_FILE = 'institution_descriptions.txt'
-OPENROUTER_API_KEY = st.secrets["OPENROUTER_API_KEY"] # <- Replace this
+OPENROUTER_API_KEYS = [
+    st.secrets["OPENROUTER_API_KEY_1"],
+    st.secrets["OPENROUTER_API_KEY_2"],
+    st.secrets["OPENROUTER_API_KEY_3"],
+    # Add more keys as needed
+]
 MODEL = 'google/gemini-2.0-flash-exp:free'
+
+if "api_key_index" not in st.session_state:
+    st.session_state["api_key_index"] = 0
 
 # --- Utility Functions ---
 
@@ -247,8 +252,11 @@ def ask_openrouter(context, question):
 
     Answer:"""
 
+    current_api_key_index = st.session_state["api_key_index"]
+    current_api_key = OPENROUTER_API_KEYS[current_api_key_index]
+
     headers = {
-        "Authorization": f"Bearer {OPENROUTER_API_KEY}",
+        "Authorization": f"Bearer {current_api_key}",
         "Content-Type": "application/json",
     }
 
@@ -265,10 +273,18 @@ def ask_openrouter(context, question):
         if 'choices' in data:
             return data['choices'][0]['message']['content']
         else:
-            return f"❌ OpenRouter error: {data}"
+            if "rate limit" in str(data).lower() or "quota" in str(data).lower():
+                st.session_state["api_key_index"] = (current_api_key_index + 1) % len(OPENROUTER_API_KEYS)
+                return ask_openrouter(context, question)  
+            else:
+                return f"❌ OpenRouter error: {data}"
 
     except Exception as e:
-        return f"❌ Error contacting OpenRouter: {e}"
+        if "rate limit" in str(e).lower() or "quota" in str(e).lower():
+            st.session_state["api_key_index"] = (current_api_key_index + 1) % len(OPENROUTER_API_KEYS)
+            return ask_openrouter(context, question)  
+        else:
+            return f"❌ Error contacting OpenRouter: {e}"
 
 # --- Memory persistence ---
 MEMORY_FILE = "chat_memory.json"
