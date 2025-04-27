@@ -136,17 +136,6 @@ section[data-testid="stSidebar"] .element-container:nth-child(3) div:hover {{
     cursor: pointer;
 }}
 
-/* Make the toggle button clearly visible in light mode */
-    [data-testid="stSidebar"] [role="switch"] {
-        background-color: #ddd; /* Light grey background */
-        border: 1px solid #999; /* Add border for better visibility */
-        border-radius: 20px;
-        padding: 5px;
-    }
-    [data-testid="stSidebar"] [role="switch"]::after {
-        background-color: #333; /* Dark circle inside the toggle */
-    }
-
 /* Headings and Texts */
 h1, h2, h3, h4, h5, h6 {{
     color: {'#f8fafc' if st.session_state["dark_mode"] else '#1f2937'};
