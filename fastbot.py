@@ -24,78 +24,114 @@ st.set_page_config(
 # --------------------------------
 
 # Inject Custom CSS
-st.markdown("""
+st.markdown(f"""
 <style>
-    /* Background Gradient */
-    [data-testid="stAppViewContainer"] {
-        background: linear-gradient(to right, #e0f7fa, #e1bee7);
-    }
+/* Main Background */
+[data-testid="stAppViewContainer"] {{
+    background: linear-gradient(to right, {('#0f2027, #203a43, #2c5364') if st.session_state["dark_mode"] else '#e0f7fa, #e1bee7'});
+    padding-top: 2rem;
+}}
 
-    /* Flex for aligning chat bubbles */
-    .stChatMessage {
-        display: flex;
-        width: 100%;
-        margin: 0.5rem 0;
-    }
+/* Sidebar */
+[data-testid="stSidebar"] {{
+    background-color: {('#111827' if st.session_state["dark_mode"] else '#f9fafb')};
+    color: {('#e0e0e0' if st.session_state["dark_mode"] else '#1a202c')};
+}}
 
-    .stChatMessage.user {
-        justify-content: flex-end;
-    }
+/* Sidebar Buttons */
+button[kind="secondary"] {{
+    background-color: {('#1f2937' if st.session_state["dark_mode"] else '#e2e8f0')};
+    color: {('#e0e0e0' if st.session_state["dark_mode"] else '#1a202c')};
+    border-radius: 10px;
+    width: 100%;
+    margin: 10px 0;
+}}
+button[kind="secondary"]:hover {{
+    background-color: {('#374151' if st.session_state["dark_mode"] else '#d1d5db')};
+}}
 
-    .stChatMessage.assistant {
-        justify-content: flex-start;
-    }
+/* Chat Messages */
+.stChatMessage {{
+    display: flex;
+    margin: 1rem 0;
+    width: 100%;
+}}
+.stChatMessage.user {{
+    justify-content: flex-end;
+}}
+.stChatMessage.assistant {{
+    justify-content: flex-start;
+}}
+.chat-bubble {{
+    max-width: 70%;
+    padding: 1rem 1.2rem;
+    border-radius: 1.5rem;
+    background: {('#2d3748' if st.session_state["dark_mode"] else '#ffffff')};
+    color: {('#e2e8f0' if st.session_state["dark_mode"] else '#1a202c')};
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+    font-size: 1rem;
+    animation: fadeIn 0.6s ease-in;
+}}
+.stChatMessage.user .chat-bubble {{
+    background: {('#4fd1c5' if st.session_state["dark_mode"] else '#c6f6d5')};
+    color: #1a202c;
+    border-bottom-right-radius: 0.4rem;
+}}
+.stChatMessage.assistant .chat-bubble {{
+    background: {('#805ad5' if st.session_state["dark_mode"] else '#e9d8fd')};
+    color: #1a202c;
+    border-bottom-left-radius: 0.4rem;
+}}
+.chat-bubble:hover {{
+    transform: scale(1.02);
+}}
 
-    /* Chat bubble style */
-    .chat-bubble {
-        max-width: 70%;
-        padding: 1rem;
-        border-radius: 1.2rem;
-        box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-        background: #ffffff !important;
-        color: #000000 !important;
-        position: relative;
-        transition: 0.2s;
-        font-size: 1rem;
-    }
+/* Smooth Typing Animation */
+@keyframes fadeIn {{
+  from {{ opacity: 0; }}
+  to {{ opacity: 1; }}
+}}
 
-    .stChatMessage.user .chat-bubble {
-        background: #dcedc8 !important;
-        border-bottom-right-radius: 0.2rem;
-    }
+/* Chat Input Box */
+[data-testid="stChatInput"] textarea {{
+    background: {('#2d3748' if st.session_state["dark_mode"] else '#ffffff')};
+    border: 2px solid {('#4fd1c5' if st.session_state["dark_mode"] else '#7c3aed')};
+    border-radius: 2rem;
+    padding: 1rem 1.2rem;
+    color: {('#e2e8f0' if st.session_state["dark_mode"] else '#333333')};
+    font-size: 1.1rem;
+    transition: all 0.3s ease;
+}}
+[data-testid="stChatInput"] textarea:focus {{
+    border-color: {('#63b3ed' if st.session_state["dark_mode"] else '#5b21b6')};
+    outline: none;
+}}
 
-    .stChatMessage.assistant .chat-bubble {
-        background: #f8bbd0 !important;
-        border-bottom-left-radius: 0.2rem;
-    }
+/* Sidebar Chat History Items */
+section[data-testid="stSidebar"] > div > div > div:nth-child(3) {{
+    margin-top: 20px;
+}}
+section[data-testid="stSidebar"] .element-container:nth-child(3) div {{
+    background-color: {('#1f2937' if st.session_state["dark_mode"] else '#edf2f7')};
+    border-radius: 10px;
+    padding: 10px;
+    margin-bottom: 10px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    transition: 0.3s ease;
+}}
+section[data-testid="stSidebar"] .element-container:nth-child(3) div:hover {{
+    background-color: {('#374151' if st.session_state["dark_mode"] else '#d1d5db')};
+    cursor: pointer;
+}}
 
-    .chat-bubble:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-    }
-
-    /* Chat input box style */
-    [data-testid="stChatInput"] {
-        background: #ffffff;
-        border: 2px solid #f8bbd0;
-        border-radius: 2rem;
-        padding: 0.5rem 1rem;
-        color: #333333;
-        font-size: 1rem;
-    }
-
-    /* Make all headings properly visible */
-    h1, h2, h3, h4, h5, h6 {
-        color: #1f2937; /* Darker shade for perfect visibility */
-        font-weight: 700; /* Bold */
-        margin-bottom: 0.5rem;
-    }
-
-    /* Make normal markdown text also more readable */
-    p, li, span, div {
-        color: #333333;
-        font-size: 1rem;
-    }
+/* Text and Heading Colors */
+h1, h2, h3, h4, h5, h6 {{
+    color: {('#f8fafc' if st.session_state["dark_mode"] else '#1f2937')};
+}}
+p, li, span, div {{
+    color: {('#e2e8f0' if st.session_state["dark_mode"] else '#333333')};
+}}
 </style>
 """, unsafe_allow_html=True)
 
