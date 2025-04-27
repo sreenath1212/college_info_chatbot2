@@ -1,4 +1,18 @@
+# Install needed libraries:
+# pip install streamlit pandas sentence-transformers faiss-cpu requests
+
+import csv
+import re
+import multiprocessing
+from multiprocessing import Pool
 import streamlit as st
+import faiss
+from sentence_transformers import SentenceTransformer
+import numpy as np
+import requests
+import os
+import time
+import json
 
 # --- MUST BE FIRST: Streamlit page config ---
 st.set_page_config(
@@ -114,6 +128,9 @@ button[kind="secondary"]:hover {{
 }}
 
 /* Sidebar Chat History Items */
+section[data-testid="stSidebar"] > div > div > div:nth-child(3) {{
+    margin-top: 20px;
+}}
 section[data-testid="stSidebar"] .element-container:nth-child(3) div {{
     background-color: {('#2d3748' if st.session_state["dark_mode"] else '#edf2f7')};
     border-radius: 10px;
@@ -126,12 +143,6 @@ section[data-testid="stSidebar"] .element-container:nth-child(3) div {{
 section[data-testid="stSidebar"] .element-container:nth-child(3) div:hover {{
     background-color: {('#4a5568' if st.session_state["dark_mode"] else '#d1d5db')};
     cursor: pointer;
-}}
-
-/* Style for the error indicator in chat history */
-.error-indicator {{ /* Replace with the actual class or selector of the red circle */
-    color: #dc3545; /* Keep it red for visibility */
-    /* Add other styles as needed, e.g., size, alignment */
 }}
 
 /* Headings and Texts */
@@ -212,7 +223,7 @@ def retrieve_relevant_context(query, top_k):
     return context
 
 def ask_openrouter(context, question):
-    prompt = f"""You are a friendly and helpful college information assistant. Answer based on CONTEXT. If unsure, say 'I couldn't find that specific information.'
+    prompt = f"""You are a friendly and helpful college information assistant. Answer based on CONTEXT. If unsure, say 'I couldn't find that specific information.' 
 
 CONTEXT:
 {context}
