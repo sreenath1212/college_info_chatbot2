@@ -43,7 +43,8 @@ st.markdown(f"""
 /* Sidebar Background and Font */
 [data-testid="stSidebar"] {{
     background-color: {'#1a202c' if st.session_state["dark_mode"] else '#f9fafb'};
-    color: {'#edf2f7' if st.session_state["dark_mode"] else '#1a202c'};
+    color: #{"edf2f7" if st.session_state["dark_mode"] else "4a5568"} !important;
+
 }}
 
 /* Sidebar Elements (Dark Mode Toggle, etc.) */
