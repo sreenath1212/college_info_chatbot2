@@ -47,8 +47,10 @@ st.markdown(f"""
 }}
 
 /* Sidebar Elements (Dark Mode Toggle, etc.) */
-.stSidebarContent svg {{
-    color: {'#edf2f7' if st.session_state["dark_mode"] else '#1a202c'} !important;
+.stSidebarContent svg {
+    color: {'#edf2f7' if st.session_state["dark_mode"] else '#4a5568'} !important;
+}
+
 }}
 
 /* Sidebar Buttons */
