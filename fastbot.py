@@ -48,6 +48,21 @@ st.markdown(f"""
     padding-top: 2rem;
 }}
 
+/* Top and Bottom Bars */
+header[data-testid="stHeader"], footer {{ /* Target both top and bottom bars */
+    background-color: #4B0082 !important; /* Dark Purple/Indigo */
+    color: #FFFFFF !important; /* White text for contrast */
+}}
+
+footer {{
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    z-index: 1000; /* Ensure it's above other content */
+    padding: 10px;
+    text-align: center;
+}}
+
 /* Sidebar Background and Font */
 [data-testid="stSidebar"] {{
     background-color: {('#3a4354' if st.session_state["dark_mode"] else '#e9d8fd')}; /* Changed Sidebar Background */
@@ -114,7 +129,7 @@ button[kind="secondary"]:hover {{
 /* Chat Input Box */
 [data-testid="stChatInput"] textarea {{
     background: {('#2d3748' if st.session_state["dark_mode"] else '#ffffff')};
-    border: 2px solid #d1d5db;
+    border: 2px solid #4B0082; /* Dark Purple/Indigo border */
     border-radius: 2rem;
     padding: 1rem;
     color: {('#e2e8f0' if st.session_state["dark_mode"] else '#333333')};
@@ -224,13 +239,13 @@ def retrieve_relevant_context(query, top_k):
 def ask_openrouter(context, question):
     prompt = f"""You are a friendly and helpful college information assistant. Answer based on CONTEXT. If unsure, say 'I couldn't find that specific information.'
 
-CONTEXT:
-{context}
+    CONTEXT:
+    {context}
 
-USER QUESTION:
-{question}
+    USER QUESTION:
+    {question}
 
-Answer:"""
+    Answer:"""
 
     headers = {
         "Authorization": f"Bearer {OPENROUTER_API_KEY}",
