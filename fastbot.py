@@ -42,7 +42,7 @@ st.markdown(f"""
 
 /* Sidebar Background and Font */
 [data-testid="stSidebar"] {{
-    background-color: {'#1a202c' if st.session_state["dark_mode"] else '#f9fafb'};
+    background-color: {'#1a202c' if st.session_state["dark_mode"] else '#e0f7fa, #e1bee7'};
     color: {'#edf2f7' if st.session_state["dark_mode"] else '#1a202c'};
 }}
 
