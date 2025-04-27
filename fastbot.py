@@ -103,7 +103,7 @@ st.markdown("""
 # CONFIG
 CSV_FILE = 'cleaned_dataset.csv'
 TXT_FILE = 'institution_descriptions.txt'
-OPENROUTER_API_KEY = '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'
+OPENROUTER_API_KEY = st.secrets["OPENROUTER_API_KEY"] 
 MODEL = 'google/gemini-2.0-flash-exp:free'
 # --------------------------------
 
