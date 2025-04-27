@@ -10,6 +10,29 @@ import requests
 import os
 import time
 import json
+import speech_recognition as sr
+import pyttsx3
+import threading
+
+# Initialize speech recognition and text-to-speech engines
+r = sr.Recognizer()
+engine = pyttsx3.init()
+
+# Function to recognize speech
+def recognize_speech():
+    with sr.Microphone() as source:
+        audio = r.listen(source)
+        try:
+            return r.recognize_google(audio)
+        except sr.UnknownValueError:
+            return "Sorry, I didn't catch that."
+        except sr.RequestError:
+            return "Error requesting results from Google Speech Recognition service."
+
+# Function to speak text
+def speak_text(text):
+    engine.say(text)
+    engine.runAndWait()
 
 # --- MUST BE FIRST: Streamlit page config ---
 st.set_page_config(
@@ -34,7 +57,8 @@ if "dark_mode" not in st.session_state:
 # Sidebar - Settings
 with st.sidebar:
     st.markdown("## ⚙️ Settings")
-    st.session_state["dark_mode"] = st.toggle("🌙 Dark Mode", value=st.session_state["dark_mode"], key="dark_mode_toggle") # Added a unique key
+    st.session_state["dark_mode"] = st.toggle("🌙 Dark Mode", value=st.session_state["dark_mode"], key="dark_mode_toggle") 
+    voice_mode = st.toggle("🗣️ Voice Mode", value=False, key="voice_mode_toggle")
 
 # Inject dynamic CSS based on mode
 st.markdown(f"""
@@ -310,7 +334,65 @@ if "messages" not in st.session_state:
     load_memory()
 
 st.title("🎓 College Info Assistant")
+st.markdown("The ultimate college companion")
 st.markdown("##### Ask anything about colleges — accurate, fast, and friendly!")
+
+if voice_mode:
+    def listen_and_respond():
+        user_query = recognize_speech()
+        st.session_state["messages"].append({"role": "user", "content": user_query})
+
+        with st.chat_message("user"):
+            st.markdown(f"<div class='chat-bubble'>{user_query}</div>", unsafe_allow_html=True)
+
+        context = retrieve_relevant_context(user_query, TOP_K)
+        raw_answer = ask_openrouter(context, user_query)
+
+        st.session_state["messages"].append({"role": "assistant", "content": raw_answer})
+
+        with st.chat_message("assistant"):
+            answer_placeholder = st.empty()
+            final_answer = ""
+            for i in range(len(raw_answer)):
+                final_answer = raw_answer[:i+1]
+                answer_placeholder.markdown(f"<div class='chat-bubble'>{final_answer}</div>", unsafe_allow_html=True)
+                time.sleep(0.01)
+        
+        speak_text(raw_answer)
+        save_memory()
+
+    threading.Thread(target=listen_and_respond).start()
+
+# Display Messages
+for msg in st.session_state["messages"]:
+    with st.chat_message(msg["role"]):
+        st.markdown(f"<div class='chat-bubble'>{msg['content']}</div>", unsafe_allow_html=True)
+
+# User Input
+if not voice_mode:
+    user_query = st.chat_input("Type your question here...")
+
+    if user_query:
+        st.session_state["messages"].append({"role": "user", "content": user_query})
+
+        with st.chat_message("user"):
+            st.markdown(f"<div class='chat-bubble'>{user_query}</div>", unsafe_allow_html=True)
+
+        context = retrieve_relevant_context(user_query, TOP_K)
+        raw_answer = ask_openrouter(context, user_query)
+
+        st.session_state["messages"].append({"role": "assistant", "content": raw_answer})
+
+        with st.chat_message("assistant"):
+            answer_placeholder = st.empty()
+            final_answer = ""
+            for i in range(len(raw_answer)):
+                final_answer = raw_answer[:i+1]
+                answer_placeholder.markdown(f"<div class='chat-bubble'>{final_answer}</div>", unsafe_allow_html=True)
+                time.sleep(0.01)
+        
+        speak_text(raw_answer)
+        save_memory()
 
 # Sidebar: Chat History
 with st.sidebar:
@@ -330,32 +412,3 @@ with st.sidebar:
         if st.session_state["messages"]:
             chat_text = "\n\n".join([f"{m['role'].capitalize()}: {m['content']}" for m in st.session_state["messages"]])
             st.download_button("Download as TXT", data=chat_text, file_name="chat_history.txt", mime="text/plain")
-
-# Display Messages
-for msg in st.session_state["messages"]:
-    with st.chat_message(msg["role"]):
-        st.markdown(f"<div class='chat-bubble'>{msg['content']}</div>", unsafe_allow_html=True)
-
-# User Input
-user_query = st.chat_input("Type your question here...")
-
-if user_query:
-    st.session_state["messages"].append({"role": "user", "content": user_query})
-
-    with st.chat_message("user"):
-        st.markdown(f"<div class='chat-bubble'>{user_query}</div>", unsafe_allow_html=True)
-
-    with st.spinner("Thinking..."):
-        context = retrieve_relevant_context(user_query, TOP_K)
-        raw_answer = ask_openrouter(context, user_query)
-
-    final_answer = ""
-    with st.chat_message("assistant"):
-        answer_placeholder = st.empty()
-        for i in range(len(raw_answer)):
-            final_answer = raw_answer[:i+1]
-            answer_placeholder.markdown(f"<div class='chat-bubble'>{final_answer}</div>", unsafe_allow_html=True)
-            time.sleep(0.01)
-
-    st.session_state["messages"].append({"role": "assistant", "content": raw_answer})
-    save_memory()
