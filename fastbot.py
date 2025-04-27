@@ -308,7 +308,7 @@ with st.sidebar:
     if st.button("🧹 Clear Chat"):
         st.session_state["messages"] = []
         save_memory()
-        st.rerun()
+        st.experimental_rerun()
 
     if st.button("📥 Download Chat"):
         if st.session_state["messages"]:
