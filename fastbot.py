@@ -37,13 +37,7 @@ if "dark_mode" not in st.session_state:
 # Sidebar - Settings
 with st.sidebar:
     st.markdown("## ⚙️ Settings")
-    st.session_state["dark_mode"] = st.toggle("🌙 Dark Mode", value=st.session_state["dark_mode"])
-
-# Inject dynamic CSS based on mode
-# Sidebar - Settings
-with st.sidebar:
-    st.markdown("## ⚙️ Settings")
-    st.session_state["dark_mode"] = st.toggle("🌙 Dark Mode", value=st.session_state["dark_mode"])
+    st.session_state["dark_mode"] = st.toggle("🌙 Dark Mode", value=st.session_state["dark_mode"], key="dark_mode_toggle") # Added a unique key
 
 # Inject dynamic CSS based on mode
 st.markdown(f"""
@@ -228,7 +222,7 @@ def retrieve_relevant_context(query, top_k):
     return context
 
 def ask_openrouter(context, question):
-    prompt = f"""You are a friendly and helpful college information assistant. Answer based on CONTEXT. If unsure, say 'I couldn't find that specific information.' 
+    prompt = f"""You are a friendly and helpful college information assistant. Answer based on CONTEXT. If unsure, say 'I couldn't find that specific information.'
 
 CONTEXT:
 {context}
