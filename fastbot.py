@@ -296,6 +296,25 @@ if "messages" not in st.session_state:
 st.title("🎓 College Info Assistant")
 st.markdown("##### Ask anything about colleges — accurate, fast, and friendly!")
 
+# Sidebar: Chat History
+with st.sidebar:
+    st.header("🕑 Chat History")
+    if st.session_state["messages"]:
+        for idx, msg in enumerate(st.session_state["messages"]):
+            st.markdown(f"**{msg['role'].capitalize()}**: {msg['content'][:30]}...")
+    else:
+        st.markdown("*No chats yet.*")
+
+    if st.button("🧹 Clear Chat"):
+        st.session_state["messages"] = []
+        save_memory()
+        st.experimental_rerun()
+
+    if st.button("📥 Download Chat"):
+        if st.session_state["messages"]:
+            chat_text = "\n\n".join([f"{m['role'].capitalize()}: {m['content']}" for m in st.session_state["messages"]])
+            st.download_button("Download as TXT", data=chat_text, file_name="chat_history.txt", mime="text/plain")
+
 # Display Messages
 for msg in st.session_state["messages"]:
     with st.chat_message(msg["role"]):
