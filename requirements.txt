@@ -3,3 +3,5 @@ pandas
 sentence-transformers
 faiss-cpu
 requests
+SpeechRecognition 
+pyttsx3
