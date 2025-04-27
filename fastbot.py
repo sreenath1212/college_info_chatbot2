@@ -29,48 +29,42 @@ if "dark_mode" not in st.session_state:
 # Sidebar - Settings
 with st.sidebar:
     st.markdown("## ⚙️ Settings")
-    st.session_state["dark_mode"] = st.toggle("🌙 Dark Mode", value=st.session_state["dark_mode"])
+    dark_mode_toggle = st.checkbox(
+        "🌙 Dark Mode",
+        value=st.session_state["dark_mode"]
+    )
+    st.session_state["dark_mode"] = dark_mode_toggle
 
-# Inject dynamic CSS based on mode
+# Inject upgraded CSS for better UI
 st.markdown(f"""
 <style>
-/* Main App Container Background */
+/* Main Background */
 [data-testid="stAppViewContainer"] {{
-    background: linear-gradient(to right, {('#0f2027, #203a43, #2c5364') if st.session_state["dark_mode"] else '#e0f7fa, #e1bee7'});
+    background: linear-gradient(to right, {('#0f2027, #203a43, #2c5364') if st.session_state["dark_mode"] else 'linear-gradient(135deg, #f0f2f5, #e0c3fc)'});
     padding-top: 2rem;
 }}
 
-/* Sidebar Background and Font */
+/* Top and Bottom fix (header and footer) */
+header, footer {{
+    background: {('#1a1a1a' if st.session_state["dark_mode"] else '#e6e0f8')};
+}}
+
+/* Sidebar */
 [data-testid="stSidebar"] {{
-    background-color: {'#1a202c' if st.session_state["dark_mode"] else '#e0f7fa, #e1bee7'};
-    color: {'#edf2f7' if st.session_state["dark_mode"] else '#1a202c'};
+    background: {('#111827' if st.session_state["dark_mode"] else 'linear-gradient(135deg, #e0c3fc, #c8d6e5)')};
+    color: {('#e0e0e0' if st.session_state["dark_mode"] else '#1a202c')};
 }}
 
-/* Sidebar Elements (Dark Mode Toggle, etc.) */
-.stSidebarContent svg {{
-    color: {'#edf2f7' if st.session_state["dark_mode"] else '#1a202c'} !important;
+/* Toggle Switch visible */
+[data-testid="stWidgetLabel"] > div {{
+    color: {('#e0e0e0' if st.session_state["dark_mode"] else '#1a202c')};
 }}
 
-/* Sidebar Buttons */
-button[kind="secondary"] {{
-    background-color: {'#2d3748' if st.session_state["dark_mode"] else '#e2e8f0'};
-    color: {'#edf2f7' if st.session_state["dark_mode"] else '#1a202c'};
-    border: 1px solid #cbd5e0;
-    border-radius: 10px;
-    margin: 10px 0px;
-    width: 100%;
-}}
-button[kind="secondary"]:hover {{
-    background-color: {'#4a5568' if st.session_state["dark_mode"] else '#cbd5e0'};
-    color: {'#e2e8f0' if st.session_state["dark_mode"] else '#1a202c'};
-}}
-
-/* Chat Message Styling */
+/* Chat Messages */
 .stChatMessage {{
     display: flex;
-    width: 100%;
     margin: 1rem 0;
-    background: none;
+    width: 100%;
 }}
 .stChatMessage.user {{
     justify-content: flex-end;
@@ -83,73 +77,59 @@ button[kind="secondary"]:hover {{
     padding: 1rem 1.2rem;
     border-radius: 1.5rem;
     background: {('#2d3748' if st.session_state["dark_mode"] else '#ffffff')};
-    color: {('#edf2f7' if st.session_state["dark_mode"] else '#1a202c')};
+    color: {('#e2e8f0' if st.session_state["dark_mode"] else '#1a202c')};
     box-shadow: 0 4px 12px rgba(0,0,0,0.1);
     transition: all 0.3s ease;
     font-size: 1rem;
+    animation: fadeIn 0.6s ease-in;
 }}
 .stChatMessage.user .chat-bubble {{
     background: {('#4fd1c5' if st.session_state["dark_mode"] else '#c6f6d5')};
     color: #1a202c;
-    border-bottom-right-radius: 0.3rem;
+    border-bottom-right-radius: 0.4rem;
 }}
 .stChatMessage.assistant .chat-bubble {{
     background: {('#805ad5' if st.session_state["dark_mode"] else '#e9d8fd')};
     color: #1a202c;
-    border-bottom-left-radius: 0.3rem;
+    border-bottom-left-radius: 0.4rem;
 }}
 .chat-bubble:hover {{
     transform: scale(1.02);
-    box-shadow: 0 6px 18px rgba(0,0,0,0.2);
 }}
 
-/* Chat Input Box */
+/* Typing Animation */
+@keyframes typing {{
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-5px); }
+  100% { transform: translateY(0px); }
+}}
+.typing-dots::after {{
+  content: '...';
+  animation: typing 1s infinite;
+}}
+
+/* Chat Input Box beautified */
 [data-testid="stChatInput"] textarea {{
     background: {('#2d3748' if st.session_state["dark_mode"] else '#ffffff')};
-    border: 2px solid #d1d5db;
+    border: 2px solid {('#4fd1c5' if st.session_state["dark_mode"] else '#7c3aed')};
     border-radius: 2rem;
-    padding: 1rem;
+    padding: 1rem 1.5rem;
     color: {('#e2e8f0' if st.session_state["dark_mode"] else '#333333')};
     font-size: 1.1rem;
-    transition: 0.3s ease;
+    transition: all 0.3s ease;
 }}
 [data-testid="stChatInput"] textarea:focus {{
-    border-color: {'#63b3ed' if st.session_state["dark_mode"] else '#7c3aed'};
+    border-color: {('#63b3ed' if st.session_state["dark_mode"] else '#5b21b6')};
     outline: none;
 }}
 
-/* Sidebar Chat History Items */
-section[data-testid="stSidebar"] > div > div > div:nth-child(3) {{
-    margin-top: 20px;
-}}
-section[data-testid="stSidebar"] .element-container:nth-child(3) div {{
-    background-color: {('#2d3748' if st.session_state["dark_mode"] else '#edf2f7')};
-    border-radius: 10px;
-    padding: 10px;
-    margin-bottom: 10px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-    transition: 0.3s ease;
-    font-size: 0.9rem;
-}}
-section[data-testid="stSidebar"] .element-container:nth-child(3) div:hover {{
-    background-color: {('#4a5568' if st.session_state["dark_mode"] else '#d1d5db')};
-    cursor: pointer;
-}}
-
-/* Headings and Texts */
-h1, h2, h3, h4, h5, h6 {{
-    color: {'#f8fafc' if st.session_state["dark_mode"] else '#1f2937'};
-}}
-p, li, span, div {{
-    color: {'#e2e8f0' if st.session_state["dark_mode"] else '#333333'};
-}}
 </style>
 """, unsafe_allow_html=True)
 
 # --- Configuration ---
 CSV_FILE = 'cleaned_dataset.csv'
 TXT_FILE = 'institution_descriptions.txt'
-OPENROUTER_API_KEY = st.secrets["OPENROUTER_API_KEY"] 
+OPENROUTER_API_KEY = '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'
 MODEL = 'google/gemini-2.0-flash-exp:free'
 
 # --- Utility Functions ---
@@ -275,7 +255,7 @@ st.markdown("##### Ask anything about colleges — accurate, fast, and friendly!
 
 # Sidebar: Chat History
 with st.sidebar:
-    st.header("🕑 Chat History")
+    st.header("🕒 Chat History")
     if st.session_state["messages"]:
         for idx, msg in enumerate(st.session_state["messages"]):
             st.markdown(f"**{msg['role'].capitalize()}**: {msg['content'][:30]}...")
@@ -287,7 +267,7 @@ with st.sidebar:
         save_memory()
         st.experimental_rerun()
 
-    if st.button("📥 Download Chat"):
+    if st.button("📅 Download Chat"):
         if st.session_state["messages"]:
             chat_text = "\n\n".join([f"{m['role'].capitalize()}: {m['content']}" for m in st.session_state["messages"]])
             st.download_button("Download as TXT", data=chat_text, file_name="chat_history.txt", mime="text/plain")
@@ -306,13 +286,17 @@ if user_query:
     with st.chat_message("user"):
         st.markdown(f"<div class='chat-bubble'>{user_query}</div>", unsafe_allow_html=True)
 
-    with st.spinner("Thinking..."):
+    with st.chat_message("assistant"):
+        dots_placeholder = st.empty()
+        for _ in range(10):
+            dots_placeholder.markdown("<div class='chat-bubble typing-dots'></div>", unsafe_allow_html=True)
+            time.sleep(0.2)
+
         context = retrieve_relevant_context(user_query, TOP_K)
         raw_answer = ask_openrouter(context, user_query)
 
-    final_answer = ""
-    with st.chat_message("assistant"):
         answer_placeholder = st.empty()
+        final_answer = ""
         for i in range(len(raw_answer)):
             final_answer = raw_answer[:i+1]
             answer_placeholder.markdown(f"<div class='chat-bubble'>{final_answer}</div>", unsafe_allow_html=True)
