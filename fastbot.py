@@ -21,20 +21,47 @@ st.set_page_config(
     layout="wide",
     initial_sidebar_state="expanded"
 )
-# --------------------------------
+# --- MUST BE FIRST: Streamlit page config ---
+st.set_page_config(
+    page_title="🎓 College Info Assistant",
+    page_icon="🤖",
+    layout="wide",
+    initial_sidebar_state="expanded"
+)
 
-# Inject Custom CSS
+# --- Dark Mode setup ---
+if "dark_mode" not in st.session_state:
+    st.session_state["dark_mode"] = False
+
+# Sidebar - Settings
+with st.sidebar:
+    st.markdown("## ⚙️ Settings")
+    st.session_state["dark_mode"] = st.toggle(
+        "🌙 Dark Mode",
+        value=st.session_state["dark_mode"],
+        label_visibility="visible"  # Smooth toggle
+    )
+    st.session_state["top_k"] = st.slider(
+        "🔍 Number of Contexts",
+        min_value=1,
+        max_value=10,  # Adjust as needed
+        value=5,  # Default value
+        step=1,
+        help="Number of relevant college descriptions to use for answering."
+    )
+
+# Inject upgraded CSS for better UI
 st.markdown(f"""
 <style>
 /* Main Background */
 [data-testid="stAppViewContainer"] {{
-    background: linear-gradient(to right, {('#0f2027, #203a43, #2c5364') if st.session_state["dark_mode"] else '#e0f7fa, #e1bee7'});
+    background: linear-gradient(to right, {('#0f2027, #203a43, #2c5364' if st.session_state["dark_mode"] else '#e0f7fa, #e1bee7')});
     padding-top: 2rem;
 }}
 
 /* Sidebar */
 [data-testid="stSidebar"] {{
-    background-color: {('#111827' if st.session_state["dark_mode"] else '#f9fafb')};
+    background-color: {('#111827' if st.session_state["dark_mode"] else '#b2ebf2')}; /* Updated light mode sidebar color */
     color: {('#e0e0e0' if st.session_state["dark_mode"] else '#1a202c')};
 }}
 
@@ -89,8 +116,8 @@ button[kind="secondary"]:hover {{
 
 /* Smooth Typing Animation */
 @keyframes fadeIn {{
-  from {{ opacity: 0; }}
-  to {{ opacity: 1; }}
+    from {{ opacity: 0; }}
+    to {{ opacity: 1; }}
 }}
 
 /* Chat Input Box */
