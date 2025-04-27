@@ -33,6 +33,9 @@ with st.sidebar:
 
 # Inject dynamic CSS based on mode
 st.markdown(f"""
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
 <style>
 /* Main App Container Background */
 [data-testid="stAppViewContainer"] {{
