@@ -149,7 +149,7 @@ p, li, span, div {{
 # --- Configuration ---
 CSV_FILE = 'cleaned_dataset.csv'
 TXT_FILE = 'institution_descriptions.txt'
-OPENROUTER_API_KEY = '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'  # <- Replace this
+OPENROUTER_API_KEY = st.secrets["OPENROUTER_API_KEY"] 
 MODEL = 'google/gemini-2.0-flash-exp:free'
 
 # --- Utility Functions ---
