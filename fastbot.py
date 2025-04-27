@@ -22,6 +22,14 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
+# Inject the viewport meta tag
+st.markdown(
+    """
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    """,
+    unsafe_allow_html=True,
+)
+
 # --- Dark Mode setup ---
 if "dark_mode" not in st.session_state:
     st.session_state["dark_mode"] = False
@@ -32,12 +40,7 @@ with st.sidebar:
     st.session_state["dark_mode"] = st.toggle("🌙 Dark Mode", value=st.session_state["dark_mode"])
 
 # Inject dynamic CSS based on mode
-st.markdown(
-    """
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    """,
-    unsafe_allow_html=True,
-)
+st.markdown(f"""
 
 <style>
 /* Main App Container Background */
@@ -155,7 +158,7 @@ p, li, span, div {{
 # --- Configuration ---
 CSV_FILE = 'cleaned_dataset.csv'
 TXT_FILE = 'institution_descriptions.txt'
-OPENROUTER_API_KEY = st.secrets["OPENROUTER_API_KEY"]  # <- Replace this
+OPENROUTER_API_KEY = st.secrets["OPENROUTER_API_KEY"] # <- Replace this
 MODEL = 'google/gemini-2.0-flash-exp:free'
 
 # --- Utility Functions ---
