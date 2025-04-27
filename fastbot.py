@@ -157,12 +157,14 @@ section[data-testid="stSidebar"] .element-container:nth-child(3) div:hover {{
 }}
 
 /* Headings and Texts */
-h1, h2, h3, h4, h5, h6 {{
-    color: {'#f8fafc' if st.session_state["dark_mode"] else '#1f2937'};
-}}
-p, li, span, div {{
-    color: {'#e2e8f0' if st.session_state["dark_mode"] else '#333333'};
-}}
+/* Headings and Texts */
+h1, h2, h3, h4, h5, h6 {
+    color: {'#f8fafc' if st.session_state["dark_mode"] else '#4B0082'};
+}
+p, li, span, div {
+    color: {'#e2e8f0' if st.session_state["dark_mode"] else '#4B0082'};
+}
+
 </style>
 """, unsafe_allow_html=True)
 
