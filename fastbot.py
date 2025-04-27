@@ -1,4 +1,4 @@
-# Install these packages if not already:
+# Install needed libraries:
 # pip install streamlit pandas sentence-transformers faiss-cpu requests
 
 import csv
@@ -12,15 +12,8 @@ import numpy as np
 import requests
 import os
 import time
+import json
 
-# --------------------------------
-# MUST BE FIRST Streamlit command
-st.set_page_config(
-    page_title="🎓 College Info Assistant",
-    page_icon="🤖",
-    layout="wide",
-    initial_sidebar_state="expanded"
-)
 # --- MUST BE FIRST: Streamlit page config ---
 st.set_page_config(
     page_title="🎓 College Info Assistant",
@@ -36,52 +29,48 @@ if "dark_mode" not in st.session_state:
 # Sidebar - Settings
 with st.sidebar:
     st.markdown("## ⚙️ Settings")
-    st.session_state["dark_mode"] = st.toggle(
-        "🌙 Dark Mode",
-        value=st.session_state["dark_mode"],
-        label_visibility="visible"  # Smooth toggle
-    )
-    st.session_state["top_k"] = st.slider(
-        "🔍 Number of Contexts",
-        min_value=1,
-        max_value=10,  # Adjust as needed
-        value=5,  # Default value
-        step=1,
-        help="Number of relevant college descriptions to use for answering."
-    )
+    st.session_state["dark_mode"] = st.toggle("🌙 Dark Mode", value=st.session_state["dark_mode"])
 
-# Inject upgraded CSS for better UI
+# Inject dynamic CSS based on mode
 st.markdown(f"""
 <style>
-/* Main Background */
+/* Main App Container Background */
 [data-testid="stAppViewContainer"] {{
-    background: linear-gradient(to right, {('#0f2027, #203a43, #2c5364' if st.session_state["dark_mode"] else '#e0f7fa, #e1bee7')});
+    background: linear-gradient(to right, {('#0f2027, #203a43, #2c5364') if st.session_state["dark_mode"] else '#e0f7fa, #e1bee7'});
     padding-top: 2rem;
 }}
 
-/* Sidebar */
+/* Sidebar Background and Font */
 [data-testid="stSidebar"] {{
-    background-color: {('#111827' if st.session_state["dark_mode"] else '#b2ebf2')}; /* Updated light mode sidebar color */
-    color: {('#e0e0e0' if st.session_state["dark_mode"] else '#1a202c')};
+    background-color: {'#1a202c' if st.session_state["dark_mode"] else '#f9fafb'};
+    color: {'#edf2f7' if st.session_state["dark_mode"] else '#1a202c'};
+}}
+
+/* Sidebar Elements (Dark Mode Toggle, etc.) */
+.stSidebarContent svg {{
+    color: {'#edf2f7' if st.session_state["dark_mode"] else '#1a202c'} !important;
 }}
 
 /* Sidebar Buttons */
 button[kind="secondary"] {{
-    background-color: {('#1f2937' if st.session_state["dark_mode"] else '#e2e8f0')};
-    color: {('#e0e0e0' if st.session_state["dark_mode"] else '#1a202c')};
+    background-color: {'#2d3748' if st.session_state["dark_mode"] else '#e2e8f0'};
+    color: {'#edf2f7' if st.session_state["dark_mode"] else '#1a202c'};
+    border: 1px solid #cbd5e0;
     border-radius: 10px;
+    margin: 10px 0px;
     width: 100%;
-    margin: 10px 0;
 }}
 button[kind="secondary"]:hover {{
-    background-color: {('#374151' if st.session_state["dark_mode"] else '#d1d5db')};
+    background-color: {'#4a5568' if st.session_state["dark_mode"] else '#cbd5e0'};
+    color: {'#e2e8f0' if st.session_state["dark_mode"] else '#1a202c'};
 }}
 
-/* Chat Messages */
+/* Chat Message Styling */
 .stChatMessage {{
     display: flex;
-    margin: 1rem 0;
     width: 100%;
+    margin: 1rem 0;
+    background: none;
 }}
 .stChatMessage.user {{
     justify-content: flex-end;
@@ -94,44 +83,38 @@ button[kind="secondary"]:hover {{
     padding: 1rem 1.2rem;
     border-radius: 1.5rem;
     background: {('#2d3748' if st.session_state["dark_mode"] else '#ffffff')};
-    color: {('#e2e8f0' if st.session_state["dark_mode"] else '#1a202c')};
+    color: {('#edf2f7' if st.session_state["dark_mode"] else '#1a202c')};
     box-shadow: 0 4px 12px rgba(0,0,0,0.1);
     transition: all 0.3s ease;
     font-size: 1rem;
-    animation: fadeIn 0.6s ease-in;
 }}
 .stChatMessage.user .chat-bubble {{
     background: {('#4fd1c5' if st.session_state["dark_mode"] else '#c6f6d5')};
     color: #1a202c;
-    border-bottom-right-radius: 0.4rem;
+    border-bottom-right-radius: 0.3rem;
 }}
 .stChatMessage.assistant .chat-bubble {{
     background: {('#805ad5' if st.session_state["dark_mode"] else '#e9d8fd')};
     color: #1a202c;
-    border-bottom-left-radius: 0.4rem;
+    border-bottom-left-radius: 0.3rem;
 }}
 .chat-bubble:hover {{
     transform: scale(1.02);
-}}
-
-/* Smooth Typing Animation */
-@keyframes fadeIn {{
-    from {{ opacity: 0; }}
-    to {{ opacity: 1; }}
+    box-shadow: 0 6px 18px rgba(0,0,0,0.2);
 }}
 
 /* Chat Input Box */
 [data-testid="stChatInput"] textarea {{
     background: {('#2d3748' if st.session_state["dark_mode"] else '#ffffff')};
-    border: 2px solid {('#4fd1c5' if st.session_state["dark_mode"] else '#7c3aed')};
+    border: 2px solid #d1d5db;
     border-radius: 2rem;
-    padding: 1rem 1.2rem;
+    padding: 1rem;
     color: {('#e2e8f0' if st.session_state["dark_mode"] else '#333333')};
     font-size: 1.1rem;
-    transition: all 0.3s ease;
+    transition: 0.3s ease;
 }}
 [data-testid="stChatInput"] textarea:focus {{
-    border-color: {('#63b3ed' if st.session_state["dark_mode"] else '#5b21b6')};
+    border-color: {'#63b3ed' if st.session_state["dark_mode"] else '#7c3aed'};
     outline: none;
 }}
 
@@ -140,38 +123,37 @@ section[data-testid="stSidebar"] > div > div > div:nth-child(3) {{
     margin-top: 20px;
 }}
 section[data-testid="stSidebar"] .element-container:nth-child(3) div {{
-    background-color: {('#1f2937' if st.session_state["dark_mode"] else '#edf2f7')};
+    background-color: {('#2d3748' if st.session_state["dark_mode"] else '#edf2f7')};
     border-radius: 10px;
     padding: 10px;
     margin-bottom: 10px;
     box-shadow: 0 2px 8px rgba(0,0,0,0.1);
     transition: 0.3s ease;
+    font-size: 0.9rem;
 }}
 section[data-testid="stSidebar"] .element-container:nth-child(3) div:hover {{
-    background-color: {('#374151' if st.session_state["dark_mode"] else '#d1d5db')};
+    background-color: {('#4a5568' if st.session_state["dark_mode"] else '#d1d5db')};
     cursor: pointer;
 }}
 
-/* Text and Heading Colors */
+/* Headings and Texts */
 h1, h2, h3, h4, h5, h6 {{
-    color: {('#f8fafc' if st.session_state["dark_mode"] else '#1f2937')};
+    color: {'#f8fafc' if st.session_state["dark_mode"] else '#1f2937'};
 }}
 p, li, span, div {{
-    color: {('#e2e8f0' if st.session_state["dark_mode"] else '#333333')};
+    color: {'#e2e8f0' if st.session_state["dark_mode"] else '#333333'};
 }}
 </style>
 """, unsafe_allow_html=True)
 
-# --------------------------------
-# CONFIG
+# --- Configuration ---
 CSV_FILE = 'cleaned_dataset.csv'
 TXT_FILE = 'institution_descriptions.txt'
-OPENROUTER_API_KEY = st.secrets["OPENROUTER_API_KEY"] 
+OPENROUTER_API_KEY = st.secrets["OPENROUTER_API_KEY"]  # <- Replace this
 MODEL = 'google/gemini-2.0-flash-exp:free'
-# --------------------------------
 
-# --------------------------------
-# 1. BATCH GENERATE METADATA
+# --- Utility Functions ---
+
 def clean_field_name(field_name):
     field_name = field_name.replace('_', ' ').replace('\n', ' ').strip().capitalize()
     field_name = re.sub(' +', ' ', field_name)
@@ -211,8 +193,6 @@ def generate_metadata_from_csv(csv_filepath, output_txt_path, num_workers=None):
         for paragraph in paragraphs:
             outfile.write(paragraph + '\n' + '-' * 40 + '\n')
 
-# --------------------------------
-# 2. LOAD DATA & EMBED
 @st.cache_resource
 def load_data_and_embeddings():
     with open(TXT_FILE, 'r', encoding='utf-8') as file:
@@ -227,16 +207,12 @@ def load_data_and_embeddings():
 
     return model, texts, index
 
-# --------------------------------
-# 3. RETRIEVE RELEVANT CONTEXT
 def retrieve_relevant_context(query, top_k):
     query_emb = model.encode([query])
     distances, indices = index.search(np.array(query_emb), top_k)
     context = "\n\n".join([texts[i] for i in indices[0]])
     return context
 
-# --------------------------------
-# 4. ASK OPENROUTER
 def ask_openrouter(context, question):
     prompt = f"""You are a friendly and helpful college information assistant. Answer based on CONTEXT. If unsure, say 'I couldn't find that specific information.' 
 
@@ -271,21 +247,31 @@ Answer:"""
     except Exception as e:
         return f"❌ Error contacting OpenRouter: {e}"
 
-# --------------------------------
-# MAIN START
+# --- Memory persistence ---
+MEMORY_FILE = "chat_memory.json"
+
+def save_memory():
+    with open(MEMORY_FILE, "w", encoding="utf-8") as f:
+        json.dump(st.session_state["messages"], f)
+
+def load_memory():
+    if os.path.exists(MEMORY_FILE):
+        with open(MEMORY_FILE, "r", encoding="utf-8") as f:
+            st.session_state["messages"] = json.load(f)
+
+# --- MAIN LOGIC START ---
+
 generate_metadata_from_csv(CSV_FILE, TXT_FILE)
 
 model, texts, index = load_data_and_embeddings()
 TOP_K = len(texts)
 
-# --------------------------------
-# STREAMLIT CHATBOT INTERFACE
-st.title("🎓 College Info Assistant")
-st.markdown("##### Ask anything about colleges — accurate, fast, and friendly!")
-
-# Initialize session state
 if "messages" not in st.session_state:
     st.session_state["messages"] = []
+    load_memory()
+
+st.title("🎓 College Info Assistant")
+st.markdown("##### Ask anything about colleges — accurate, fast, and friendly!")
 
 # Sidebar: Chat History
 with st.sidebar:
@@ -298,6 +284,7 @@ with st.sidebar:
 
     if st.button("🧹 Clear Chat"):
         st.session_state["messages"] = []
+        save_memory()
         st.experimental_rerun()
 
     if st.button("📥 Download Chat"):
@@ -314,18 +301,15 @@ for msg in st.session_state["messages"]:
 user_query = st.chat_input("Type your question here...")
 
 if user_query:
-    # Add user message
     st.session_state["messages"].append({"role": "user", "content": user_query})
 
     with st.chat_message("user"):
         st.markdown(f"<div class='chat-bubble'>{user_query}</div>", unsafe_allow_html=True)
 
-    # Show loading animation
     with st.spinner("Thinking..."):
         context = retrieve_relevant_context(user_query, TOP_K)
         raw_answer = ask_openrouter(context, user_query)
 
-    # Typing effect simulation
     final_answer = ""
     with st.chat_message("assistant"):
         answer_placeholder = st.empty()
@@ -334,5 +318,5 @@ if user_query:
             answer_placeholder.markdown(f"<div class='chat-bubble'>{final_answer}</div>", unsafe_allow_html=True)
             time.sleep(0.01)
 
-    # Add bot answer
     st.session_state["messages"].append({"role": "assistant", "content": raw_answer})
+    save_memory()
