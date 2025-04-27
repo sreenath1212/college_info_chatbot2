@@ -29,35 +29,37 @@ if "dark_mode" not in st.session_state:
 # Sidebar - Settings
 with st.sidebar:
     st.markdown("## ⚙️ Settings")
-    dark_mode_toggle = st.checkbox(
+    st.session_state["dark_mode"] = st.toggle(
         "🌙 Dark Mode",
-        value=st.session_state["dark_mode"]
+        value=st.session_state["dark_mode"],
+        label_visibility="visible"  # Smooth toggle
     )
-    st.session_state["dark_mode"] = dark_mode_toggle
 
 # Inject upgraded CSS for better UI
 st.markdown(f"""
 <style>
 /* Main Background */
 [data-testid="stAppViewContainer"] {{
-    background: linear-gradient(to right, {('#0f2027, #203a43, #2c5364') if st.session_state["dark_mode"] else 'linear-gradient(135deg, #f0f2f5, #e0c3fc)'});
+    background: linear-gradient(to right, {('#0f2027, #203a43, #2c5364') if st.session_state["dark_mode"] else '#e0f7fa, #e1bee7'});
     padding-top: 2rem;
-}}
-
-/* Top and Bottom fix (header and footer) */
-header, footer {{
-    background: {('#1a1a1a' if st.session_state["dark_mode"] else '#e6e0f8')};
 }}
 
 /* Sidebar */
 [data-testid="stSidebar"] {{
-    background: {('#111827' if st.session_state["dark_mode"] else 'linear-gradient(135deg, #e0c3fc, #c8d6e5)')};
+    background-color: {('#111827' if st.session_state["dark_mode"] else '#f9fafb')};
     color: {('#e0e0e0' if st.session_state["dark_mode"] else '#1a202c')};
 }}
 
-/* Toggle Switch visible */
-[data-testid="stWidgetLabel"] > div {{
+/* Sidebar Buttons */
+button[kind="secondary"] {{
+    background-color: {('#1f2937' if st.session_state["dark_mode"] else '#e2e8f0')};
     color: {('#e0e0e0' if st.session_state["dark_mode"] else '#1a202c')};
+    border-radius: 10px;
+    width: 100%;
+    margin: 10px 0;
+}}
+button[kind="secondary"]:hover {{
+    background-color: {('#374151' if st.session_state["dark_mode"] else '#d1d5db')};
 }}
 
 /* Chat Messages */
@@ -97,23 +99,18 @@ header, footer {{
     transform: scale(1.02);
 }}
 
-/* Typing Animation */
-@keyframes typing {{
-  0% { transform: translateY(0px); }
-  50% { transform: translateY(-5px); }
-  100% { transform: translateY(0px); }
-}}
-.typing-dots::after {{
-  content: '...';
-  animation: typing 1s infinite;
+/* Smooth Typing Animation */
+@keyframes fadeIn {{
+  from {{ opacity: 0; }}
+  to {{ opacity: 1; }}
 }}
 
-/* Chat Input Box beautified */
+/* Chat Input Box */
 [data-testid="stChatInput"] textarea {{
     background: {('#2d3748' if st.session_state["dark_mode"] else '#ffffff')};
     border: 2px solid {('#4fd1c5' if st.session_state["dark_mode"] else '#7c3aed')};
     border-radius: 2rem;
-    padding: 1rem 1.5rem;
+    padding: 1rem 1.2rem;
     color: {('#e2e8f0' if st.session_state["dark_mode"] else '#333333')};
     font-size: 1.1rem;
     transition: all 0.3s ease;
@@ -123,6 +120,30 @@ header, footer {{
     outline: none;
 }}
 
+/* Sidebar Chat History Items */
+section[data-testid="stSidebar"] > div > div > div:nth-child(3) {{
+    margin-top: 20px;
+}}
+section[data-testid="stSidebar"] .element-container:nth-child(3) div {{
+    background-color: {('#1f2937' if st.session_state["dark_mode"] else '#edf2f7')};
+    border-radius: 10px;
+    padding: 10px;
+    margin-bottom: 10px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    transition: 0.3s ease;
+}}
+section[data-testid="stSidebar"] .element-container:nth-child(3) div:hover {{
+    background-color: {('#374151' if st.session_state["dark_mode"] else '#d1d5db')};
+    cursor: pointer;
+}}
+
+/* Text and Heading Colors */
+h1, h2, h3, h4, h5, h6 {{
+    color: {('#f8fafc' if st.session_state["dark_mode"] else '#1f2937')};
+}}
+p, li, span, div {{
+    color: {('#e2e8f0' if st.session_state["dark_mode"] else '#333333')};
+}}
 </style>
 """, unsafe_allow_html=True)
 
@@ -255,7 +276,7 @@ st.markdown("##### Ask anything about colleges — accurate, fast, and friendly!
 
 # Sidebar: Chat History
 with st.sidebar:
-    st.header("🕒 Chat History")
+    st.header("🕑 Chat History")
     if st.session_state["messages"]:
         for idx, msg in enumerate(st.session_state["messages"]):
             st.markdown(f"**{msg['role'].capitalize()}**: {msg['content'][:30]}...")
@@ -267,7 +288,7 @@ with st.sidebar:
         save_memory()
         st.experimental_rerun()
 
-    if st.button("📅 Download Chat"):
+    if st.button("📥 Download Chat"):
         if st.session_state["messages"]:
             chat_text = "\n\n".join([f"{m['role'].capitalize()}: {m['content']}" for m in st.session_state["messages"]])
             st.download_button("Download as TXT", data=chat_text, file_name="chat_history.txt", mime="text/plain")
@@ -286,17 +307,13 @@ if user_query:
     with st.chat_message("user"):
         st.markdown(f"<div class='chat-bubble'>{user_query}</div>", unsafe_allow_html=True)
 
-    with st.chat_message("assistant"):
-        dots_placeholder = st.empty()
-        for _ in range(10):
-            dots_placeholder.markdown("<div class='chat-bubble typing-dots'></div>", unsafe_allow_html=True)
-            time.sleep(0.2)
-
+    with st.spinner("Thinking..."):
         context = retrieve_relevant_context(user_query, TOP_K)
         raw_answer = ask_openrouter(context, user_query)
 
+    final_answer = ""
+    with st.chat_message("assistant"):
         answer_placeholder = st.empty()
-        final_answer = ""
         for i in range(len(raw_answer)):
             final_answer = raw_answer[:i+1]
             answer_placeholder.markdown(f"<div class='chat-bubble'>{final_answer}</div>", unsafe_allow_html=True)
