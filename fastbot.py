@@ -32,7 +32,12 @@ with st.sidebar:
     st.session_state["dark_mode"] = st.toggle("🌙 Dark Mode", value=st.session_state["dark_mode"])
 
 # Inject dynamic CSS based on mode
-st.markdown(f"""
+st.markdown(
+    """
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    """,
+    unsafe_allow_html=True,
+)
 
 <style>
 /* Main App Container Background */
