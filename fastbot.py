@@ -11,12 +11,17 @@ import os
 import time
 import json
 import speech_recognition as sr
-import pyttsx3
+try:
+    import pyttsx3
+except RuntimeError:
+    st.warning("Text-to-speech functionality is not available.")
+    pyttsx3 = None
 import threading
 
 # Initialize speech recognition and text-to-speech engines
 r = sr.Recognizer()
-engine = pyttsx3.init()
+if pyttsx3:
+    engine = pyttsx3.init()
 
 # Function to recognize speech
 def recognize_speech():
@@ -31,8 +36,11 @@ def recognize_speech():
 
 # Function to speak text
 def speak_text(text):
-    engine.say(text)
-    engine.runAndWait()
+    if pyttsx3:
+        engine.say(text)
+        engine.runAndWait()
+    else:
+        st.warning("Text-to-speech functionality is not available.")
 
 # --- MUST BE FIRST: Streamlit page config ---
 st.set_page_config(
