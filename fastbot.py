@@ -150,7 +150,7 @@ p, li, span, div {{
 # --- Configuration ---
 CSV_FILE = 'cleaned_dataset.csv'
 TXT_FILE = 'institution_descriptions.txt'
-OPENROUTER_API_KEY = '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'
+OPENROUTER_API_KEY = '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'
 MODEL = 'google/gemini-2.0-flash-exp:free'
 
 # --- Utility Functions ---
