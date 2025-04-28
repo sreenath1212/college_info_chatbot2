@@ -46,8 +46,8 @@ st.markdown(f"""
 <style>
 /* Main App Container Background */
 [data-testid="stAppViewContainer"] {{
-    background: linear-gradient(to right, {('#0f2027, #203a43, #2c5364') if st.session_state["dark_mode"] else '#e0f7fa, #e1bee7'});
-    padding-top: 7rem; /* Reduced for better top spacing */
+    background: linear-gradient(to right, {{'#0f2027, #203a43, #2c5364' if st.session_state["dark_mode"] else '#e0f7fa, #e1bee7'}});
+    padding-top: 7rem;
 }}
 
 /* Top and Bottom Bars */
@@ -55,13 +55,9 @@ header[data-testid="stHeader"], footer {{
     background: linear-gradient(90deg, #6a11cb 0%, #2575fc 100%) !important;
     color: #FFFFFF !important;
 }}
-
-/* Proper Footer Styling - Hide Streamlit Default Footer */
 footer {{
     visibility: hidden;
 }}
-
-/* Custom Footer */
 .custom-footer {{
     position: fixed;
     bottom: 0;
@@ -75,7 +71,6 @@ footer {{
     color: white;
     font-size: 1rem;
 }}
-
 
 /* Custom Sticky Header */
 .custom-header {{
@@ -92,8 +87,8 @@ footer {{
     animation: slideDown 0.5s ease forwards;
 }}
 @keyframes slideDown {{
-    0% {{transform: translateY(-100%);}}
-    100% {{transform: translateY(0);}}
+    0% {{ transform: translateY(-100%); }}
+    100% {{ transform: translateY(0); }}
 }}
 .custom-header h1 {{
     color: white;
@@ -106,27 +101,27 @@ footer {{
     margin-top: 0.3rem;
 }}
 
-/* Sidebar Background and Elements */
+/* Sidebar Background */
 [data-testid="stSidebar"] {{
-    background-color: {('#3a4354' if st.session_state["dark_mode"] else '#e9d8fd')};
-    color: {('#edf2f7' if st.session_state["dark_mode"] else '#1a202c')};
+    background-color: {{'#3a4354' if st.session_state["dark_mode"] else '#e9d8fd'}};
+    color: {{'#edf2f7' if st.session_state["dark_mode"] else '#1a202c'}};
 }}
 .stSidebarContent svg {{
-    color: {('#edf2f7' if st.session_state["dark_mode"] else '#1a202c')} !important;
+    color: {{'#edf2f7' if st.session_state["dark_mode"] else '#1a202c'}} !important;
 }}
+
+/* Sidebar Buttons */
 button[kind="secondary"] {{
-    background-color: {('#2d3748' if st.session_state["dark_mode"] else '#e2e8f0')};
-    color: {('#edf2f7' if st.session_state["dark_mode"] else '#1a202c')};
+    background-color: {{'#2d3748' if st.session_state["dark_mode"] else '#e2e8f0'}};
+    color: {{'#edf2f7' if st.session_state["dark_mode"] else '#1a202c'}};
     border: 1px solid #cbd5e0;
     border-radius: 10px;
     margin: 10px 0px;
     width: 100%;
 }}
 button[kind="secondary"]:hover {{
-    background-color: {('#4a5568' if st.session_state["dark_mode"] else '#cbd5e0')};
+    background-color: {{'#4a5568' if st.session_state["dark_mode"] else '#cbd5e0'}};
 }}
-
-
 
 /* Chat Message Styling */
 .stChatMessage {{
@@ -145,19 +140,19 @@ button[kind="secondary"]:hover {{
     max-width: 70%;
     padding: 1rem 1.2rem;
     border-radius: 1.5rem;
-    background: {('#2d3748' if st.session_state["dark_mode"] else '#ffffff')};
-    color: {('#edf2f7' if st.session_state["dark_mode"] else '#1a202c')};
+    background: {{'#2d3748' if st.session_state["dark_mode"] else '#ffffff'}};
+    color: {{'#edf2f7' if st.session_state["dark_mode"] else '#1a202c'}};
     box-shadow: 0 4px 12px rgba(0,0,0,0.1);
     transition: all 0.3s ease;
     font-size: 1rem;
 }}
 .stChatMessage.user .chat-bubble {{
-    background: {('#4fd1c5' if st.session_state["dark_mode"] else '#c6f6d5')};
+    background: {{'#4fd1c5' if st.session_state["dark_mode"] else '#c6f6d5'}};
     color: #1a202c;
     border-bottom-right-radius: 0.3rem;
 }}
 .stChatMessage.assistant .chat-bubble {{
-    background: {('#805ad5' if st.session_state["dark_mode"] else '#e9d8fd')};
+    background: {{'#805ad5' if st.session_state["dark_mode"] else '#e9d8fd'}};
     color: #1a202c;
     border-bottom-left-radius: 0.3rem;
 }}
@@ -166,21 +161,49 @@ button[kind="secondary"]:hover {{
     box-shadow: 0 6px 18px rgba(0,0,0,0.2);
 }}
 
-
-/* Typing box focus effect */
+/* Chat Input Area */
+[data-testid="stChatInput"] textarea {{
+    background-color: {{'#2d3748' if st.session_state["dark_mode"] else '#ffffff'}};
+    color: {{'#edf2f7' if st.session_state["dark_mode"] else '#1a202c'}};
+    border: 1px solid {{'#4a5568' if st.session_state["dark_mode"] else '#cbd5e0'}};
+    border-radius: 1.5rem;
+    padding: 1rem;
+    font-size: 1rem;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+    width: 100%;
+}}
+[data-testid="stChatInput"] textarea:hover {{
+    box-shadow: 0 0 10px rgba(124, 58, 237, 0.2);
+}}
 [data-testid="stChatInput"] textarea:focus {{
-    border-color: #7c3aed; /* Purple accent on focus */
-    box-shadow: 0 0 8px rgba(124, 58, 237, 0.5); /* Glow on focus */
+    background-color: {{'#1a202c' if st.session_state["dark_mode"] else '#f3f4f6'}};
+    border-color: #7c3aed;
+    box-shadow: 0 0 8px rgba(124, 58, 237, 0.5);
     outline: none;
 }}
 
+/* Chat Submit Button */
+[data-testid="stChatInput"] button {{
+    background: linear-gradient(90deg, #6a11cb 0%, #2575fc 100%);
+    color: white;
+    border: none;
+    border-radius: 1rem;
+    padding: 0.5rem 1rem;
+    font-size: 1rem;
+    margin-left: 0.5rem;
+    transition: background 0.3s ease;
+}}
+[data-testid="stChatInput"] button:hover {{
+    background: linear-gradient(90deg, #5b0eb1 0%, #1a4ed8 100%);
+}}
 
-/* Sidebar Chat History Items */
+/* Sidebar Chat History Cards */
 section[data-testid="stSidebar"] > div > div > div:nth-child(3) {{
     margin-top: 20px;
 }}
 section[data-testid="stSidebar"] .element-container:nth-child(3) div {{
-    background-color: {('#2d3748' if st.session_state["dark_mode"] else '#edf2f7')};
+    background-color: {{'#2d3748' if st.session_state["dark_mode"] else '#edf2f7'}};
     border-radius: 10px;
     padding: 10px;
     margin-bottom: 10px;
@@ -189,16 +212,16 @@ section[data-testid="stSidebar"] .element-container:nth-child(3) div {{
     font-size: 0.9rem;
 }}
 section[data-testid="stSidebar"] .element-container:nth-child(3) div:hover {{
-    background-color: {('#4a5568' if st.session_state["dark_mode"] else '#d1d5db')};
+    background-color: {{'#4a5568' if st.session_state["dark_mode"] else '#d1d5db'}};
     cursor: pointer;
 }}
 
 /* Text and Headings */
 h1, h2, h3, h4, h5, h6 {{
-    color: {('#f8fafc' if st.session_state["dark_mode"] else '#1f2937')};
+    color: {{'#f8fafc' if st.session_state["dark_mode"] else '#1f2937'}};
 }}
 p, li, span, div {{
-    color: {('#e2e8f0' if st.session_state["dark_mode"] else '#333333')};
+    color: {{'#e2e8f0' if st.session_state["dark_mode"] else '#333333'}};
 }}
 </style>
 
@@ -210,8 +233,8 @@ p, li, span, div {{
 <div class="custom-footer">
     Made with ❤️ by College Info Assistant
 </div>
-
 """, unsafe_allow_html=True)
+
 
 
 # (Continue your main application logic from here)
