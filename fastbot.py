@@ -19,6 +19,22 @@ st.set_page_config(
     initial_sidebar_state="auto"
 )
 
+# Force Sidebar to Collapse (for Streamlit Cloud too)
+st.markdown(
+    """
+    <script>
+        window.addEventListener('DOMContentLoaded', (event) => {
+            const sidebar = window.parent.document.querySelector('section[data-testid="stSidebar"]');
+            if (sidebar) {
+                sidebar.style.transform = 'translateX(-100%)'; // hide sidebar
+            }
+        });
+    </script>
+    """,
+    unsafe_allow_html=True
+)
+
+
 # Inject the viewport meta tag
 st.markdown(
     """
