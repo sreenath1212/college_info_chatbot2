@@ -43,104 +43,18 @@ with st.sidebar:
 # --- Inject dynamic CSS ---
 st.markdown(f"""
 <style>
-/* Main Background Full Fix */
-[data-testid="stAppViewContainer"] > .main {{
+/* Main App Container Background */
+[data-testid="stAppViewContainer"] {{
     background: linear-gradient(to right, {{'#0f2027, #203a43, #2c5364' if st.session_state["dark_mode"] else '#e0f7fa, #e1bee7'}});
-    min-height: 100vh;
-    padding-bottom: 7rem; /* make space for footer */
+    padding-top: 7rem;
 }}
 
-/* Block Container Transparent */
-.block-container {{
-    background: transparent;
+/* Top and Bottom Bars */
+header[data-testid="stHeader"], footer {{
+    background: linear-gradient(90deg, #6a11cb 0%, #2575fc 100%) !important;
+    color: #FFFFFF !important;
 }}
-
-/* Chat Input Footer Full Fix */
-[data-testid="stChatInput"] {{
-    background: linear-gradient(90deg, #e0f7fa, #e1bee7);
-    border-top: 2px solid #b794f4;
-    padding: 0.8rem 1rem;
-    backdrop-filter: blur(10px);
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    justify-content: center;
-}}
-
-/* Chat Input Textarea */
-[data-testid="stChatInput"] textarea {{
-    flex: 1;
-    background: rgba(255,255,255,0.85);
-    color: #1a202c;
-    border: 1px solid #cbd5e0;
-    border-radius: 2rem;
-    padding: 1rem 1.5rem;
-    font-size: 1rem;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-    min-height: 48px;
-    resize: none;
-    transition: all 0.3s ease;
-}}
-
-/* Textarea Hover and Focus */
-[data-testid="stChatInput"] textarea:hover {{
-    box-shadow: 0 0 10px rgba(124, 58, 237, 0.2);
-}}
-[data-testid="stChatInput"] textarea:focus {{
-    border-color: #7c3aed;
-    background: rgba(243,244,246,0.9);
-    box-shadow: 0 0 10px rgba(124, 58, 237, 0.4);
-    outline: none;
-}}
-
-/* Chat Submit Button */
-[data-testid="stChatInput"] button {{
-    background: linear-gradient(90deg, #6a11cb 0%, #2575fc 100%);
-    color: white;
-    border: none;
-    border-radius: 50%;
-    height: 48px;
-    width: 48px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: transform 0.2s ease, background 0.3s ease;
-}}
-[data-testid="stChatInput"] button:hover {{
-    background: linear-gradient(90deg, #5b0eb1 0%, #1a4ed8 100%);
-    transform: scale(1.1);
-}}
-
-/* Chat Bubbles */
-.stChatMessage {{
-    display: flex;
-    width: 100%;
-    margin: 1rem 0;
-}}
-.stChatMessage.user {{
-    justify-content: flex-end;
-}}
-.stChatMessage.assistant {{
-    justify-content: flex-start;
-}}
-.chat-bubble {{
-    max-width: 70%;
-    padding: 1rem 1.2rem;
-    border-radius: 1.5rem;
-    background: {{'#2d3748' if st.session_state["dark_mode"] else '#ffffff'}};
-    color: {{'#edf2f7' if st.session_state["dark_mode"] else '#1a202c'}};
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-    font-size: 1rem;
-    transition: all 0.3s ease;
-}}
-.stChatMessage.user .chat-bubble {{
-    background: {{'#4fd1c5' if st.session_state["dark_mode"] else '#c6f6d5'}};
-}}
-.stChatMessage.assistant .chat-bubble {{
-    background: {{'#805ad5' if st.session_state["dark_mode"] else '#e9d8fd'}};
-}}
-
-/* Footer */
+footer {{ visibility: hidden; }}
 .custom-footer {{
     position: fixed;
     bottom: 0;
@@ -152,9 +66,10 @@ st.markdown(f"""
     z-index: 999;
     color: white;
     font-size: 1rem;
+    box-shadow: 0 -4px 6px rgba(0,0,0,0.2);
 }}
 
-/* Header */
+/* Custom Sticky Header */
 .custom-header {{
     position: fixed;
     top: 0;
@@ -164,7 +79,13 @@ st.markdown(f"""
     padding: 1rem 0;
     text-align: center;
     z-index: 999;
+    margin-top: 30px;
+    animation: slideDown 0.5s ease forwards;
     box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+}}
+@keyframes slideDown {{
+    0% {{ transform: translateY(-100%); }}
+    100% {{ transform: translateY(0); }}
 }}
 .custom-header h1 {{
     color: white;
@@ -175,6 +96,135 @@ st.markdown(f"""
     color: #e0e0e0;
     font-size: 1.1rem;
     margin-top: 0.3rem;
+}}
+
+/* Sidebar */
+[data-testid="stSidebar"] {{
+    background-color: {{'#3a4354' if st.session_state["dark_mode"] else '#e9d8fd'}};
+}}
+.stSidebarContent svg {{
+    color: {{'#edf2f7' if st.session_state["dark_mode"] else '#1a202c'}} !important;
+}}
+button[kind="secondary"] {{
+    background-color: {{'#2d3748' if st.session_state["dark_mode"] else '#e2e8f0'}};
+    color: {{'#edf2f7' if st.session_state["dark_mode"] else '#1a202c'}};
+    border: 1px solid #cbd5e0;
+    border-radius: 10px;
+    margin: 10px 0;
+    width: 100%;
+}}
+button[kind="secondary"]:hover {{
+    background-color: {{'#4a5568' if st.session_state["dark_mode"] else '#cbd5e0'}};
+}}
+
+/* Chat Message Styling */
+.stChatMessage {{
+    display: flex;
+    width: 100%;
+    margin: 1rem 0;
+    background: none;
+}}
+.stChatMessage.user {{ justify-content: flex-end; }}
+.stChatMessage.assistant {{ justify-content: flex-start; }}
+.chat-bubble {{
+    max-width: 70%;
+    padding: 1rem 1.2rem;
+    border-radius: 1.5rem;
+    background: {{'#2d3748' if st.session_state["dark_mode"] else '#ffffff'}};
+    color: {{'#edf2f7' if st.session_state["dark_mode"] else '#1a202c'}};
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+    font-size: 1rem;
+}}
+.stChatMessage.user .chat-bubble {{
+    background: {{'#4fd1c5' if st.session_state["dark_mode"] else '#c6f6d5'}};
+    color: #1a202c;
+    border-bottom-right-radius: 0.3rem;
+}}
+.stChatMessage.assistant .chat-bubble {{
+    background: {{'#805ad5' if st.session_state["dark_mode"] else '#e9d8fd'}};
+    color: #1a202c;
+    border-bottom-left-radius: 0.3rem;
+}}
+.chat-bubble:hover {{
+    transform: scale(1.02);
+    box-shadow: 0 6px 18px rgba(0,0,0,0.2);
+}}
+
+/* Chat Input Footer */
+[data-testid="stChatInput"] {{
+    background: linear-gradient(90deg, #e0f7fa, #e1bee7);
+    border-top: 2px solid #b794f4;
+    padding: 0.5rem 1rem;
+    backdrop-filter: blur(10px);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}}
+
+/* Textarea */
+[data-testid="stChatInput"] textarea {{
+    flex: 1;
+    background-color: rgba(255, 255, 255, 0.8);
+    color: #1a202c;
+    border: 1px solid #cbd5e0;
+    border-radius: 2rem;
+    padding: 1rem 1.5rem;
+    font-size: 1rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+    width: 100%;
+    min-height: 50px;
+    resize: none;
+}}
+[data-testid="stChatInput"] textarea:hover {{
+    box-shadow: 0 0 12px rgba(124, 58, 237, 0.2);
+}}
+[data-testid="stChatInput"] textarea:focus {{
+    background-color: rgba(243, 244, 246, 0.9);
+    border-color: #7c3aed;
+    box-shadow: 0 0 8px rgba(124, 58, 237, 0.5);
+    outline: none;
+}}
+
+/* Submit Button */
+[data-testid="stChatInput"] button {{
+    background: linear-gradient(90deg, #6a11cb 0%, #2575fc 100%);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    height: 48px;
+    width: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.3s ease, transform 0.2s ease;
+}}
+[data-testid="stChatInput"] button:hover {{
+    background: linear-gradient(90deg, #5b0eb1 0%, #1a4ed8 100%);
+    transform: scale(1.1);
+}}
+
+/* Sidebar History */
+section[data-testid="stSidebar"] .element-container:nth-child(3) div {{
+    background-color: {{'#2d3748' if st.session_state["dark_mode"] else '#edf2f7'}};
+    border-radius: 10px;
+    padding: 10px;
+    margin-bottom: 10px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    transition: 0.3s ease;
+}}
+section[data-testid="stSidebar"] .element-container:nth-child(3) div:hover {{
+    background-color: {{'#4a5568' if st.session_state["dark_mode"] else '#d1d5db'}};
+    cursor: pointer;
+}}
+
+/* Global Text */
+h1, h2, h3, h4, h5, h6 {{
+    color: {{'#f8fafc' if st.session_state["dark_mode"] else '#1f2937'}};
+}}
+p, li, span, div {{
+    color: {{'#e2e8f0' if st.session_state["dark_mode"] else '#333333'}};
 }}
 </style>
 
