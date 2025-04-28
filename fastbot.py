@@ -193,15 +193,8 @@ button[kind="secondary"]:hover {{
     resize: none;
 }}
 
-[data-testid="stChatInput"] textarea:hover {{
-    box-shadow: 0 0 12px rgba(124, 58, 237, 0.2);
-}}
-[data-testid="stChatInput"] textarea:focus {{
-    background-color: rgba(243, 244, 246, 0.9);
-    border-color: #7c3aed;
-    box-shadow: 0 0 8px rgba(124, 58, 237, 0.5);
-    outline: none;
-}}
+
+
 
 /* Submit Button */
 [data-testid="stChatInput"] button {{
