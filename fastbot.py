@@ -174,7 +174,10 @@ if "messages" not in st.session_state:
     st.session_state["messages"] = []
     load_memory()
 
-
+if not st.session_state["messages"]:
+    welcome_message = "👋 Hello! How can I help you today? I can assist you with any college information you need."
+    st.session_state["messages"].append({"role": "assistant", "content": welcome_message})
+    save_memory()
 
 
 
