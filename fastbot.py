@@ -51,8 +51,10 @@ st.markdown(f"""
 
 /* Top and Bottom Bars */
 header[data-testid="stHeader"], footer {{
-    background-color: #4B0082 !important;
+    background: linear-gradient(90deg, #6a11cb 0%, #2575fc 100%) !important;
     color: #FFFFFF !important;
+}}
+
 }}
 footer {{
     position: fixed;
