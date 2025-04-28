@@ -10,6 +10,7 @@ import requests
 import os
 import time
 import json
+import datetime
 
 # --- MUST BE FIRST: Streamlit page config ---
 st.set_page_config(
@@ -204,12 +205,13 @@ with st.sidebar:
         for i in range(0, len(messages) - 1, 2):
             user_msg = messages[i]['content'] if messages[i]['role'] == 'user' else ""
             assistant_msg = messages[i+1]['content'] if messages[i+1]['role'] == 'assistant' else ""
+            timestamp = messages[i].get('timestamp', '')  # Get saved timestamp
+            chat_preview = f"**{timestamp}**<br>🧑 {user_msg[:20]}...<br>🤖 {assistant_msg[:20]}..."
             chats.append({
-                "index": i,  # Save the starting index
-                "preview": f"**You:** {user_msg[:20]}...<br>**AI:** {assistant_msg[:20]}..."
+                "index": i,
+                "preview": chat_preview
             })
 
-        # Display each chat as a button
         for chat in chats:
             if st.button(chat["preview"], key=f"chat_{chat['index']}"):
                 st.session_state["selected_chat"] = chat["index"]
@@ -251,7 +253,8 @@ for msg in messages_to_show:
 user_query = st.chat_input("Type your question here...")
 
 if user_query:
-    st.session_state["messages"].append({"role": "user", "content": user_query})
+    timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    st.session_state["messages"].append({"role": "user", "content": user_query, "timestamp": timestamp})
 
     with st.chat_message("user"):
         st.markdown(f"<div class='chat-bubble'>{user_query}</div>", unsafe_allow_html=True)
@@ -268,5 +271,6 @@ if user_query:
             answer_placeholder.markdown(f"<div class='chat-bubble'>{final_answer}</div>", unsafe_allow_html=True)
             time.sleep(0.01)
 
-    st.session_state["messages"].append({"role": "assistant", "content": raw_answer})
+    st.session_state["messages"].append({"role": "assistant", "content": raw_answer, "timestamp": timestamp})
+
     save_memory()
