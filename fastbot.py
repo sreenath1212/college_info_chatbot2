@@ -19,17 +19,6 @@ st.set_page_config(
     initial_sidebar_state="auto"
 )
 
-
-
-
-# Inject the viewport meta tag
-st.markdown(
-    """
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    """,
-    unsafe_allow_html=True,
-)
-
 # --- Dark Mode setup ---
 if "dark_mode" not in st.session_state:
     st.session_state["dark_mode"] = False
@@ -37,7 +26,7 @@ if "dark_mode" not in st.session_state:
 # Sidebar - Settings
 with st.sidebar:
     st.markdown("## ⚙️ Settings")
-    st.session_state["dark_mode"] = st.toggle("🌙 Dark Mode", value=st.session_state["dark_mode"], key="dark_mode_toggle") # Added a unique key
+    st.session_state["dark_mode"] = st.toggle("🌙 Dark Mode", value=st.session_state["dark_mode"], key="dark_mode_toggle")
 
 # Inject dynamic CSS based on mode
 st.markdown(f"""
@@ -49,32 +38,32 @@ st.markdown(f"""
 }}
 
 /* Top and Bottom Bars */
-header[data-testid="stHeader"], footer {{ /* Target both top and bottom bars */
-    background-color: #4B0082 !important; /* Dark Purple/Indigo */
-    color: #FFFFFF !important; /* White text for contrast */
+header[data-testid="stHeader"], footer {{ 
+    background-color: #4B0082 !important; 
+    color: #FFFFFF !important; 
 }}
 
 footer {{
     position: fixed;
     bottom: 0;
     width: 100%;
-    z-index: 1000; /* Ensure it's above other content */
+    z-index: 1000; 
     padding: 10px;
     text-align: center;
 }}
 
 /* Sidebar Background and Font */
 [data-testid="stSidebar"] {{
-    background-color: {('#3a4354' if st.session_state["dark_mode"] else '#e9d8fd')}; /* Changed Sidebar Background */
+    background-color: {('#3a4354' if st.session_state["dark_mode"] else '#e9d8fd')}; 
     color: {'#edf2f7' if st.session_state["dark_mode"] else '#1a202c'};
 }}
 
-/* Sidebar Elements (Dark Mode Toggle, etc.) */
+/* Sidebar Elements */
 .stSidebarContent svg {{
     color: {'#edf2f7' if st.session_state["dark_mode"] else '#1a202c'} !important;
 }}
 
-/* Sidebar Buttons */
+/* Buttons */
 button[kind="secondary"] {{
     background-color: {'#2d3748' if st.session_state["dark_mode"] else '#e2e8f0'};
     color: {'#edf2f7' if st.session_state["dark_mode"] else '#1a202c'};
@@ -129,10 +118,10 @@ button[kind="secondary"]:hover {{
 /* Chat Input Box */
 [data-testid="stChatInput"] textarea {{
     background: {('#2d3748' if st.session_state["dark_mode"] else '#ffffff')};
-    border: 2px solid #4B0082; /* Dark Purple/Indigo border */
+    border: 2px solid #4B0082; 
     border-radius: 2rem;
     padding: 1rem;
-    color: {('#e2e8f0' if st.session_state["dark_mode"] else '#333333')};
+    color: {('#e2e8f2f0' if st.session_state["dark_mode"] else '#333333')};
     font-size: 1.1rem;
     transition: 0.3s ease;
 }}
@@ -141,30 +130,17 @@ button[kind="secondary"]:hover {{
     outline: none;
 }}
 
-/* Sidebar Chat History Items */
-section[data-testid="stSidebar"] > div > div > div:nth-child(3) {{
-    margin-top: 20px;
-}}
-section[data-testid="stSidebar"] .element-container:nth-child(3) div {{
-    background-color: {('#2d3748' if st.session_state["dark_mode"] else '#edf2f7')};
-    border-radius: 10px;
-    padding: 10px;
-    margin-bottom: 10px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-    transition: 0.3s ease;
-    font-size: 0.9rem;
-}}
-section[data-testid="stSidebar"] .element-container:nth-child(3) div:hover {{
-    background-color: {('#4a5568' if st.session_state["dark_mode"] else '#d1d5db')};
-    cursor: pointer;
-}}
-
-/* Headings and Texts */
-h1, h2, h3, h4, h5, h6 {{
-    color: {'#f8fafc' if st.session_state["dark_mode"] else '#1f2937'};
-}}
-p, li, span, div {{
-    color: {'#e2e8f0' if st.session_state["dark_mode"] else '#333333'};
+/* Mobile-specific styles */
+@media only screen and (max-width: 600px) {{
+    .chat-bubble {{
+        max-width: 100%;
+    }}
+    .chat-bubble {{
+        font-size: 0.9rem;
+    }}
+    [data-testid="stSidebar"] {{
+        width: 100%;
+    }}
 }}
 </style>
 """, unsafe_allow_html=True)
@@ -175,8 +151,6 @@ TXT_FILE = 'institution_descriptions.txt'
 OPENROUTER_API_KEYS = [
     st.secrets["OPENROUTER_API_KEY_1"],
     st.secrets["OPENROUTER_API_KEY_2"],
-    
-    # Add more keys as needed
 ]
 MODEL = 'google/gemini-2.0-flash-exp:free'
 
@@ -184,7 +158,6 @@ if "api_key_index" not in st.session_state:
     st.session_state["api_key_index"] = 0
 
 # --- Utility Functions ---
-
 def clean_field_name(field_name):
     field_name = field_name.replace('_', ' ').replace('\n', ' ').strip().capitalize()
     field_name = re.sub(' +', ' ', field_name)
@@ -302,7 +275,6 @@ def load_memory():
             st.session_state["messages"] = json.load(f)
 
 # --- MAIN LOGIC START ---
-
 generate_metadata_from_csv(CSV_FILE, TXT_FILE)
 
 model, texts, index = load_data_and_embeddings()
@@ -314,25 +286,6 @@ if "messages" not in st.session_state:
 
 st.title("🎓 College Info Assistant")
 st.markdown("##### Ask anything about colleges — accurate, fast, and friendly!")
-
-# Sidebar: Chat History
-with st.sidebar:
-    st.header("🕑 Chat History")
-    if st.session_state["messages"]:
-        for idx, msg in enumerate(st.session_state["messages"]):
-            st.markdown(f"**{msg['role'].capitalize()}**: {msg['content'][:30]}...")
-    else:
-        st.markdown("*No chats yet.*")
-
-    if st.button("🧹 Clear Chat"):
-        st.session_state["messages"] = []
-        save_memory()
-        st.rerun()
-
-    if st.button("📥 Download Chat"):
-        if st.session_state["messages"]:
-            chat_text = "\n\n".join([f"{m['role'].capitalize()}: {m['content']}" for m in st.session_state["messages"]])
-            st.download_button("Download as TXT", data=chat_text, file_name="chat_history.txt", mime="text/plain")
 
 # Display Messages
 for msg in st.session_state["messages"]:
@@ -362,3 +315,24 @@ if user_query:
 
     st.session_state["messages"].append({"role": "assistant", "content": raw_answer})
     save_memory()
+
+# Sidebar: Chat History
+with st.sidebar:
+    st.header("🕑 Chat History")
+    if st.session_state["messages"]:
+        for idx, msg in enumerate(st.session_state["messages"]):
+            st.markdown(f"**{msg['role'].capitalize()}**: {msg['content'][:30]}...")
+    else:
+        st.markdown("*No chats yet.*")
+
+    col1, col2 = st.columns([1, 1])
+    with col1:
+        if st.button("🧹 Clear Chat"):
+            st.session_state["messages"] = []
+            save_memory()
+            st.rerun()
+    with col2:
+        if st.button("📥 Download Chat"):
+            if st.session_state["messages"]:
+                chat_text = "\n\n".join([f"{m['role'].capitalize()}: {m['content']}" for m in st.session_state["messages"]])
+                st.download_button("Download as TXT", data=chat_text, file_name="chat_history.txt", mime="text/plain")
