@@ -74,6 +74,7 @@ footer {{
     text-align: center;
     z-index: 999;
     box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+    margin-top: 20px;
     animation: slideDown 0.5s ease forwards;
 }}
 @keyframes slideDown {{
