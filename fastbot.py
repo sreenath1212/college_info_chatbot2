@@ -61,18 +61,18 @@ footer {{
 }}
 
 /* Custom Sticky Top Header */
-.custom-header {{
-    position: fixed;
-    top: 0;
-    left: 0;
+.custom-header {{    position: fixed;
+    top: 1rem; /* instead of 3.5rem */
     width: 100%;
     background: linear-gradient(90deg, #6a11cb 0%, #2575fc 100%);
-    padding: 1rem 0;
+    color: white;
     text-align: center;
-    z-index: 999;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.2);
-    animation: slideDown 0.5s ease forwards;
+    padding: 10px 0;
+    z-index: 1000;
+    border-radius: 0 0 20px 20px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
 }}
+
 
 @keyframes slideDown {{
     0% {{transform: translateY(-100%);}}
