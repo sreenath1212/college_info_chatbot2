@@ -16,7 +16,15 @@ st.set_page_config(
     page_title="🎓 College Info Assistant",
     page_icon="🤖",
     layout="wide",
-    initial_sidebar_state="auto"
+    initial_sidebar_state="expanded"
+)
+
+# Inject the viewport meta tag
+st.markdown(
+    """
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    """,
+    unsafe_allow_html=True,
 )
 
 # --- Dark Mode setup ---
@@ -26,124 +34,9 @@ if "dark_mode" not in st.session_state:
 # Sidebar - Settings
 with st.sidebar:
     st.markdown("## ⚙️ Settings")
-    st.session_state["dark_mode"] = st.toggle("🌙 Dark Mode", value=st.session_state["dark_mode"], key="dark_mode_toggle")
+    st.session_state["dark_mode"] = st.toggle("🌙 Dark Mode", value=st.session_state["dark_mode"], key="dark_mode_toggle") # Added a unique key
 
-# Inject dynamic CSS based on mode
-st.markdown(f"""
-<style>
-/* Main App Container Background */
-[data-testid="stAppViewContainer"] {{
-    background: linear-gradient(to right, {('#0f2027, #203a43, #2c5364') if st.session_state["dark_mode"] else '#e0f7fa, #e1bee7'});
-    padding-top: 2rem;
-}}
 
-/* Top and Bottom Bars */
-header[data-testid="stHeader"], footer {{ 
-    background-color: #4B0082 !important; 
-    color: #FFFFFF !important; 
-}}
-
-footer {{
-    position: fixed;
-    bottom: 0;
-    width: 100%;
-    z-index: 1000; 
-    padding: 10px;
-    text-align: center;
-}}
-
-/* Sidebar Background and Font */
-[data-testid="stSidebar"] {{
-    background-color: {('#3a4354' if st.session_state["dark_mode"] else '#e9d8fd')}; 
-    color: {'#edf2f7' if st.session_state["dark_mode"] else '#1a202c'};
-}}
-
-/* Sidebar Elements */
-.stSidebarContent svg {{
-    color: {'#edf2f7' if st.session_state["dark_mode"] else '#1a202c'} !important;
-}}
-
-/* Buttons */
-button[kind="secondary"] {{
-    background-color: {'#2d3748' if st.session_state["dark_mode"] else '#e2e8f0'};
-    color: {'#edf2f7' if st.session_state["dark_mode"] else '#1a202c'};
-    border: 1px solid #cbd5e0;
-    border-radius: 10px;
-    margin: 10px 0px;
-    width: 100%;
-}}
-button[kind="secondary"]:hover {{
-    background-color: {'#4a5568' if st.session_state["dark_mode"] else '#cbd5e0'};
-    color: {'#e2e8f0' if st.session_state["dark_mode"] else '#1a202c'};
-}}
-
-/* Chat Message Styling */
-.stChatMessage {{
-    display: flex;
-    width: 100%;
-    margin: 1rem 0;
-    background: none;
-}}
-.stChatMessage.user {{
-    justify-content: flex-end;
-}}
-.stChatMessage.assistant {{
-    justify-content: flex-start;
-}}
-.chat-bubble {{
-    max-width: 70%;
-    padding: 1rem 1.2rem;
-    border-radius: 1.5rem;
-    background: {('#2d3748' if st.session_state["dark_mode"] else '#ffffff')};
-    color: {('#edf2f7' if st.session_state["dark_mode"] else '#1a202c')};
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-    transition: all 0.3s ease;
-    font-size: 1rem;
-}}
-.stChatMessage.user .chat-bubble {{
-    background: {('#4fd1c5' if st.session_state["dark_mode"] else '#c6f6d5')};
-    color: #1a202c;
-    border-bottom-right-radius: 0.3rem;
-}}
-.stChatMessage.assistant .chat-bubble {{
-    background: {('#805ad5' if st.session_state["dark_mode"] else '#e9d8fd')};
-    color: #1a202c;
-    border-bottom-left-radius: 0.3rem;
-}}
-.chat-bubble:hover {{
-    transform: scale(1.02);
-    box-shadow: 0 6px 18px rgba(0,0,0,0.2);
-}}
-
-/* Chat Input Box */
-[data-testid="stChatInput"] textarea {{
-    background: {('#2d3748' if st.session_state["dark_mode"] else '#ffffff')};
-    border: 2px solid #4B0082; 
-    border-radius: 2rem;
-    padding: 1rem;
-    color: {('#e2e8f2f0' if st.session_state["dark_mode"] else '#333333')};
-    font-size: 1.1rem;
-    transition: 0.3s ease;
-}}
-[data-testid="stChatInput"] textarea:focus {{
-    border-color: {'#63b3ed' if st.session_state["dark_mode"] else '#7c3aed'};
-    outline: none;
-}}
-
-/* Mobile-specific styles */
-@media only screen and (max-width: 600px) {{
-    .chat-bubble {{
-        max-width: 100%;
-    }}
-    .chat-bubble {{
-        font-size: 0.9rem;
-    }}
-    [data-testid="stSidebar"] {{
-        width: 100%;
-    }}
-}}
-</style>
-""", unsafe_allow_html=True)
 
 # --- Configuration ---
 CSV_FILE = 'cleaned_dataset.csv'
@@ -151,6 +44,8 @@ TXT_FILE = 'institution_descriptions.txt'
 OPENROUTER_API_KEYS = [
     st.secrets["OPENROUTER_API_KEY_1"],
     st.secrets["OPENROUTER_API_KEY_2"],
+    
+    # Add more keys as needed
 ]
 MODEL = 'google/gemini-2.0-flash-exp:free'
 
@@ -158,6 +53,7 @@ if "api_key_index" not in st.session_state:
     st.session_state["api_key_index"] = 0
 
 # --- Utility Functions ---
+
 def clean_field_name(field_name):
     field_name = field_name.replace('_', ' ').replace('\n', ' ').strip().capitalize()
     field_name = re.sub(' +', ' ', field_name)
@@ -275,6 +171,7 @@ def load_memory():
             st.session_state["messages"] = json.load(f)
 
 # --- MAIN LOGIC START ---
+
 generate_metadata_from_csv(CSV_FILE, TXT_FILE)
 
 model, texts, index = load_data_and_embeddings()
@@ -286,6 +183,25 @@ if "messages" not in st.session_state:
 
 st.title("🎓 College Info Assistant")
 st.markdown("##### Ask anything about colleges — accurate, fast, and friendly!")
+
+# Sidebar: Chat History
+with st.sidebar:
+    st.header("🕑 Chat History")
+    if st.session_state["messages"]:
+        for idx, msg in enumerate(st.session_state["messages"]):
+            st.markdown(f"**{msg['role'].capitalize()}**: {msg['content'][:30]}...")
+    else:
+        st.markdown("*No chats yet.*")
+
+    if st.button("🧹 Clear Chat"):
+        st.session_state["messages"] = []
+        save_memory()
+        st.rerun()
+
+    if st.button("📥 Download Chat"):
+        if st.session_state["messages"]:
+            chat_text = "\n\n".join([f"{m['role'].capitalize()}: {m['content']}" for m in st.session_state["messages"]])
+            st.download_button("Download as TXT", data=chat_text, file_name="chat_history.txt", mime="text/plain")
 
 # Display Messages
 for msg in st.session_state["messages"]:
@@ -315,24 +231,3 @@ if user_query:
 
     st.session_state["messages"].append({"role": "assistant", "content": raw_answer})
     save_memory()
-
-# Sidebar: Chat History
-with st.sidebar:
-    st.header("🕑 Chat History")
-    if st.session_state["messages"]:
-        for idx, msg in enumerate(st.session_state["messages"]):
-            st.markdown(f"**{msg['role'].capitalize()}**: {msg['content'][:30]}...")
-    else:
-        st.markdown("*No chats yet.*")
-
-    col1, col2 = st.columns([1, 1])
-    with col1:
-        if st.button("🧹 Clear Chat"):
-            st.session_state["messages"] = []
-            save_memory()
-            st.rerun()
-    with col2:
-        if st.button("📥 Download Chat"):
-            if st.session_state["messages"]:
-                chat_text = "\n\n".join([f"{m['role'].capitalize()}: {m['content']}" for m in st.session_state["messages"]])
-                st.download_button("Download as TXT", data=chat_text, file_name="chat_history.txt", mime="text/plain")
