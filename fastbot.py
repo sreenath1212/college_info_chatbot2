@@ -166,23 +166,30 @@ button[kind="secondary"]:hover {{
     box-shadow: 0 6px 18px rgba(0,0,0,0.2);
 }}
 
-/* Chat Input Area Full Fix */
+/* Chat input container (background gradient) */
 [data-testid="stChatInputContainer"] {{
     background: linear-gradient(90deg, #6a11cb 0%, #2575fc 100%) !important;
     padding: 1rem;
     border-top: 1px solid rgba(255, 255, 255, 0.2);
 }}
 
-/* Chat Input Box */
+/* Actual typing box (textarea) */
 [data-testid="stChatInput"] textarea {{
-    background: transparent;
+    background: #ffffff !important; /* WHITE background */
     border: 2px solid #4B0082;
     border-radius: 2rem;
     padding: 1rem;
-    color: {('#e2e8f0' if st.session_state["dark_mode"] else '#333333')};
+    color: #000000; /* Black text inside */
     font-size: 1.1rem;
     transition: 0.3s ease;
+    box-shadow: none;
 }}
+
+/* Placeholder text inside the typing box */
+[data-testid="stChatInput"] textarea::placeholder {{
+    color: #666666; /* Gray placeholder text */
+}}
+
 
 }}
 [data-testid="stChatInput"] textarea:focus {{
