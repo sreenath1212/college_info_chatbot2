@@ -40,111 +40,118 @@ with st.sidebar:
 st.markdown(f"""
 <style>
 
+/* Root colors */
 :root {{
-    /* Light mode defaults */
-    --bg-color: #ffffff;
-    --text-color: #111827;
-    --secondary-text-color: #4b5563;
-    --primary-color: #2563eb;
-    --card-bg: #f9fafb;
-    --border-color: #e5e7eb;
+  --color-bg-light: #ffffff;
+  --color-bg-dark: #0e1117;
+  --color-text-light: #111827;
+  --color-text-dark: #f3f4f6;
+  --color-secondary-light: #6b7280;
+  --color-secondary-dark: #9ca3af;
+  --color-accent: #3b82f6;
+  --color-border-light: #e5e7eb;
+  --color-border-dark: #374151;
+  --color-card-light: #f9fafb;
+  --color-card-dark: #1f2937;
 }}
 
-body.dark, .dark & {{
-    /* Dark mode overrides */
-    --bg-color: #0e1117;
-    --text-color: #f3f4f6;
-    --secondary-text-color: #9ca3af;
-    --primary-color: #3b82f6;
-    --card-bg: #1f2937;
-    --border-color: #374151;
+body {{
+  background-color: { "#0e1117" if st.session_state["dark_mode"] else "#ffffff" };
+  color: { "#f3f4f6" if st.session_state["dark_mode"] else "#111827" };
+  font-family: 'Inter', 'Segoe UI', sans-serif;
 }}
 
-/* Apply base background and font colors */
-html, body, [data-testid="stApp"] {{
-    background-color: var(--bg-color);
-    color: var(--text-color);
+/* Center header */
+h1 {{
+    text-align: center;
+    font-size: 2.5rem;
+    margin-top: 1rem;
+    margin-bottom: 0.5rem;
+    color: { "#f9fafb" if st.session_state["dark_mode"] else "#1e293b" };
 }}
 
-/* Headings and text */
-h1, h2, h3, h4, h5, h6 {{
-    color: var(--text-color);
-}}
-
-/* Card-like container for chat messages */
-.chat-bubble {{
-    background-color: var(--card-bg);
-    border: 1px solid var(--border-color);
-    border-radius: 1rem;
-    padding: 1rem;
-    margin: 0.5rem 0;
-    font-size: 1rem;
-    line-height: 1.5;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-    transition: background-color 0.3s, border-color 0.3s;
-    word-wrap: break-word;
-}}
-
-/* Streamlit buttons */
-button[kind="secondary"] {{
-    background-color: var(--primary-color);
-    color: #ffffff;
-    border: none;
-    border-radius: 0.5rem;
-    padding: 0.6rem 1.2rem;
-    font-weight: 600;
-    transition: background-color 0.3s;
-}}
-
-button[kind="secondary"]:hover {{
-    background-color: #1d4ed8;
+p {{
+    text-align: center;
+    font-size: 1.1rem;
+    color: { "#9ca3af" if st.session_state["dark_mode"] else "#6b7280" };
 }}
 
 /* Sidebar */
 [data-testid="stSidebar"] {{
-    background-color: var(--card-bg);
-    border-right: 1px solid var(--border-color);
+    background: { "#1f2937" if st.session_state["dark_mode"] else "#f9fafb" };
+    border-right: 1px solid { "#374151" if st.session_state["dark_mode"] else "#e5e7eb" };
+    padding: 1rem;
 }}
 
-[data-testid="stSidebar"] h1, [data-testid="stSidebar"] h2, [data-testid="stSidebar"] h3 {{
-    color: var(--text-color);
+/* Chat bubbles */
+.chat-bubble {{
+  background-color: { "#1f2937" if st.session_state["dark_mode"] else "#f3f4f6" };
+  border: 1px solid { "#374151" if st.session_state["dark_mode"] else "#e5e7eb" };
+  border-radius: 1rem;
+  padding: 1rem 1.5rem;
+  margin: 1rem 0;
+  font-size: 1rem;
+  color: { "#f9fafb" if st.session_state["dark_mode"] else "#1e293b" };
+  line-height: 1.6;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
 }}
 
-/* Sidebar elements spacing */
-.sidebar-content > * {{
-    margin-bottom: 1rem;
+/* Buttons */
+button[kind="secondary"] {{
+    background-color: var(--color-accent);
+    color: #ffffff;
+    font-weight: 600;
+    padding: 0.6rem 1.2rem;
+    border: none;
+    border-radius: 0.6rem;
+    transition: all 0.3s ease;
 }}
 
-/* Text input (chat input) */
-input[type="text"] {{
-    background-color: var(--card-bg);
-    color: var(--text-color);
-    border: 1px solid var(--border-color);
-    border-radius: 0.5rem;
-    padding: 0.5rem 1rem;
+button[kind="secondary"]:hover {{
+    background-color: #2563eb;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(59, 130, 246, 0.3);
 }}
 
 /* Chat input box */
 .css-15zrgzn.eqr7zpz3 {{
-    background-color: var(--card-bg);
+    background-color: { "#1f2937" if st.session_state["dark_mode"] else "#f9fafb" };
+    border: 1px solid { "#374151" if st.session_state["dark_mode"] else "#e5e7eb" };
+    color: { "#f3f4f6" if st.session_state["dark_mode"] else "#111827" };
     border-radius: 0.5rem;
-    border: 1px solid var(--border-color);
+    padding: 0.75rem;
 }}
 
-/* Scrollbar styling */
+/* Text Input */
+input[type="text"] {{
+  background-color: inherit;
+  color: inherit;
+  border: none;
+  outline: none;
+  font-size: 1rem;
+}}
+
+/* Scrollbar */
 ::-webkit-scrollbar {{
-    width: 8px;
+  width: 8px;
 }}
 ::-webkit-scrollbar-thumb {{
-    background-color: var(--border-color);
-    border-radius: 4px;
+  background: { "#374151" if st.session_state["dark_mode"] else "#d1d5db" };
+  border-radius: 4px;
 }}
 ::-webkit-scrollbar-thumb:hover {{
-    background-color: var(--primary-color);
+  background: { "#3b82f6" };
+}}
+
+/* Loader spinner */
+.css-1v0mbdj.e1tzin5v2 {{
+  color: { "#3b82f6" };
 }}
 
 </style>
 """, unsafe_allow_html=True)
+
 
 # --- Configuration ---
 CSV_FILE = 'cleaned_dataset.csv'
