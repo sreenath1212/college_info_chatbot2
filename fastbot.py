@@ -27,30 +27,12 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
-# Mobile-friendly CSS
+# ===== ADD YOUR APP TITLE HERE =====
 st.markdown(
     """
-    <style>
-    /* Make chat bubbles responsive */
-    .chat-bubble {
-        max-width: 100%;
-        padding: 0.75rem;
-        margin: 0.5rem 0;
-        border-radius: 1rem;
-        background: #f1f1f1;
-        word-wrap: break-word;
-        overflow-wrap: break-word;
-    }
-    @media (max-width: 768px) {
-        /* Adjust layout for small devices */
-        .block-container {
-            padding: 1rem;
-        }
-        .stSidebar {
-            display: none;
-        }
-    }
-    </style>
+    <h1 style='text-align: center; font-size: 3em; margin-bottom: 0.5em;'>
+        🎓 College Information Assistant
+    </h1>
     """,
     unsafe_allow_html=True
 )
