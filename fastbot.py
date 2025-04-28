@@ -158,7 +158,7 @@ button[kind="secondary"]:hover {{
 }}
 
 /* Chat Input Area Full Fix */
-div.stChatInputContainer {{
+[data-testid="stChatInputContainer"] {{
     background: linear-gradient(90deg, #6a11cb 0%, #2575fc 100%) !important;
     padding: 1rem;
     border-top: 1px solid rgba(255, 255, 255, 0.2);
