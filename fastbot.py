@@ -166,35 +166,6 @@ button[kind="secondary"]:hover {{
     box-shadow: 0 6px 18px rgba(0,0,0,0.2);
 }}
 
-/* Chat Input Footer */
-[data-testid="stChatInput"] {{
-    background: linear-gradient(90deg, #e0f7fa, #e1bee7);
-    border-top: 2px solid #b794f4;
-    padding: 0.5rem 1rem;
-    backdrop-filter: blur(10px);
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-}}
-
-/* Textarea */
-[data-testid="stChatInput"] textarea {{
-    flex: 1;
-    background-color: rgba(255, 255, 255, 0.8);
-    color: #1a202c;
-    border: 1px solid #cbd5e0;
-    border-radius: 2rem;
-    padding: 1rem 1.5rem;
-    font-size: 1rem;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-    transition: all 0.3s ease;
-    width: 100%;
-    min-height: 50px;
-    resize: none;
-}}
-
-
-
 
 /* Submit Button */
 [data-testid="stChatInput"] button {{
