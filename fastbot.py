@@ -223,11 +223,11 @@ p, li, span, div {{
 
 <div class="custom-header">
     <h1>🎓 College Info Assistant</h1>
-    <p>Ask anything about colleges — accurate, fast, and friendly!</p>
+    <p>Ask anything about colleges </p>
 </div>
 
 <div class="custom-footer">
-    Made with ❤️ by College Info Assistant
+    Made with ❤️ by College of Applied Science Mavelikkara
 </div>
 
 """, unsafe_allow_html=True)
