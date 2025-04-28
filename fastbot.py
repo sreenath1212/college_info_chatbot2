@@ -166,6 +166,32 @@ p, li, span, div {{
 </style>
 """, unsafe_allow_html=True)
 
+st.markdown("""
+    <style>
+    /* Make title section background match */
+    .main > div:first-child {
+        background: linear-gradient(to right, #6a11cb, #2575fc); /* purple-blue gradient */
+        padding: 1rem;
+        border-radius: 0 0 10px 10px;
+    }
+
+    /* Fix (stick) the title and subheading */
+    header, .main > div:first-child {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 100;
+    }
+
+    /* Push content down below header */
+    .block-container {
+        padding-top: 6rem;
+    }
+    </style>
+""", unsafe_allow_html=True)
+
+
 
 # --- Configuration ---
 CSV_FILE = 'cleaned_dataset.csv'
