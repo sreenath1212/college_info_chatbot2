@@ -175,13 +175,15 @@ button[kind="secondary"]:hover {{
 
 /* Chat Input Box */
 [data-testid="stChatInput"] textarea {{
-    background: {('#2d3748' if st.session_state["dark_mode"] else '#ffffff')};
+    background: transparent;
     border: 2px solid #4B0082;
     border-radius: 2rem;
     padding: 1rem;
     color: {('#e2e8f0' if st.session_state["dark_mode"] else '#333333')};
     font-size: 1.1rem;
     transition: 0.3s ease;
+}}
+
 }}
 [data-testid="stChatInput"] textarea:focus {{
     border-color: {('#63b3ed' if st.session_state["dark_mode"] else '#7c3aed')};
