@@ -37,32 +37,64 @@ with st.sidebar:
     st.session_state["dark_mode"] = st.toggle("🌙 Dark Mode", value=st.session_state["dark_mode"], key="dark_mode_toggle") # Added a unique key
 
 # Inject dynamic CSS based on mode
+
 st.markdown(f"""
 <style>
 /* Main App Container Background */
 [data-testid="stAppViewContainer"] {{
     background: linear-gradient(to right, {('#0f2027, #203a43, #2c5364') if st.session_state["dark_mode"] else '#e0f7fa, #e1bee7'});
-    padding-top: 2rem;
+    padding-top: 8rem; /* Push content below fixed header */
 }}
 
 /* Top and Bottom Bars */
-header[data-testid="stHeader"], footer {{ /* Target both top and bottom bars */
-    background-color: #4B0082 !important; /* Dark Purple/Indigo */
-    color: #FFFFFF !important; /* White text for contrast */
+header[data-testid="stHeader"], footer {{ 
+    background-color: #4B0082 !important; 
+    color: #FFFFFF !important; 
 }}
 
 footer {{
     position: fixed;
     bottom: 0;
     width: 100%;
-    z-index: 1000; /* Ensure it's above other content */
+    z-index: 1000; 
     padding: 10px;
     text-align: center;
 }}
 
+/* Custom Sticky Top Header */
+.custom-header {{
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background: linear-gradient(90deg, #6a11cb 0%, #2575fc 100%);
+    padding: 1rem 0;
+    text-align: center;
+    z-index: 999;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+    animation: slideDown 0.5s ease forwards;
+}}
+
+@keyframes slideDown {{
+    0% {{transform: translateY(-100%);}}
+    100% {{transform: translateY(0);}}
+}}
+
+.custom-header h1 {{
+    color: white;
+    font-size: 2.5rem;
+    margin: 0;
+}}
+
+.custom-header p {{
+    color: #e0e0e0;
+    font-size: 1.2rem;
+    margin-top: 0.5rem;
+}}
+
 /* Sidebar Background and Font */
 [data-testid="stSidebar"] {{
-    background-color: {('#3a4354' if st.session_state["dark_mode"] else '#e9d8fd')}; /* Changed Sidebar Background */
+    background-color: {('#3a4354' if st.session_state["dark_mode"] else '#e9d8fd')}; 
     color: {'#edf2f7' if st.session_state["dark_mode"] else '#1a202c'};
 }}
 
@@ -126,7 +158,7 @@ button[kind="secondary"]:hover {{
 /* Chat Input Box */
 [data-testid="stChatInput"] textarea {{
     background: {('#2d3748' if st.session_state["dark_mode"] else '#ffffff')};
-    border: 2px solid #4B0082; /* Dark Purple/Indigo border */
+    border: 2px solid #4B0082; 
     border-radius: 2rem;
     padding: 1rem;
     color: {('#e2e8f0' if st.session_state["dark_mode"] else '#333333')};
@@ -164,32 +196,14 @@ p, li, span, div {{
     color: {'#e2e8f0' if st.session_state["dark_mode"] else '#333333'};
 }}
 </style>
+
+<div class="custom-header">
+    <h1>🎓 College Info Assistant</h1>
+    <p>Ask anything about colleges — accurate, fast, and friendly!</p>
+</div>
 """, unsafe_allow_html=True)
 
-st.markdown("""
-    <style>
-    /* Make title section background match */
-    .main > div:first-child {
-        background: linear-gradient(to right, #6a11cb, #2575fc); /* purple-blue gradient */
-        padding: 1rem;
-        border-radius: 0 0 10px 10px;
-    }
 
-    /* Fix (stick) the title and subheading */
-    header, .main > div:first-child {
-        position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        z-index: 100;
-    }
-
-    /* Push content down below header */
-    .block-container {
-        padding-top: 6rem;
-    }
-    </style>
-""", unsafe_allow_html=True)
 
 
 
