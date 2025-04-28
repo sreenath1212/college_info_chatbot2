@@ -39,116 +39,130 @@ with st.sidebar:
 # Inject dynamic CSS based on mode
 st.markdown(f"""
 <style>
-
-/* Root colors */
-:root {{
-  --color-bg-light: #ffffff;
-  --color-bg-dark: #0e1117;
-  --color-text-light: #111827;
-  --color-text-dark: #f3f4f6;
-  --color-secondary-light: #6b7280;
-  --color-secondary-dark: #9ca3af;
-  --color-accent: #3b82f6;
-  --color-border-light: #e5e7eb;
-  --color-border-dark: #374151;
-  --color-card-light: #f9fafb;
-  --color-card-dark: #1f2937;
+/* Main App Container Background */
+[data-testid="stAppViewContainer"] {{
+    background: linear-gradient(to right, {('#0f2027, #203a43, #2c5364') if st.session_state["dark_mode"] else '#e0f7fa, #e1bee7'});
+    padding-top: 2rem;
 }}
 
-body {{
-  background-color: { "#0e1117" if st.session_state["dark_mode"] else "#ffffff" };
-  color: { "#f3f4f6" if st.session_state["dark_mode"] else "#111827" };
-  font-family: 'Inter', 'Segoe UI', sans-serif;
+/* Top and Bottom Bars */
+header[data-testid="stHeader"], footer {{ /* Target both top and bottom bars */
+    background-color: #4B0082 !important; /* Dark Purple/Indigo */
+    color: #FFFFFF !important; /* White text for contrast */
 }}
 
-/* Center header */
-h1 {{
+footer {{
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    z-index: 1000; /* Ensure it's above other content */
+    padding: 10px;
     text-align: center;
-    font-size: 2.5rem;
-    margin-top: 1rem;
-    margin-bottom: 0.5rem;
-    color: { "#f9fafb" if st.session_state["dark_mode"] else "#1e293b" };
 }}
 
-p {{
-    text-align: center;
-    font-size: 1.1rem;
-    color: { "#9ca3af" if st.session_state["dark_mode"] else "#6b7280" };
-}}
-
-/* Sidebar */
+/* Sidebar Background and Font */
 [data-testid="stSidebar"] {{
-    background: { "#1f2937" if st.session_state["dark_mode"] else "#f9fafb" };
-    border-right: 1px solid { "#374151" if st.session_state["dark_mode"] else "#e5e7eb" };
-    padding: 1rem;
+    background-color: {('#3a4354' if st.session_state["dark_mode"] else '#e9d8fd')}; /* Changed Sidebar Background */
+    color: {'#edf2f7' if st.session_state["dark_mode"] else '#1a202c'};
 }}
 
-/* Chat bubbles */
-.chat-bubble {{
-  background-color: { "#1f2937" if st.session_state["dark_mode"] else "#f3f4f6" };
-  border: 1px solid { "#374151" if st.session_state["dark_mode"] else "#e5e7eb" };
-  border-radius: 1rem;
-  padding: 1rem 1.5rem;
-  margin: 1rem 0;
-  font-size: 1rem;
-  color: { "#f9fafb" if st.session_state["dark_mode"] else "#1e293b" };
-  line-height: 1.6;
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.1);
-  transition: all 0.3s ease;
+/* Sidebar Elements (Dark Mode Toggle, etc.) */
+.stSidebarContent svg {{
+    color: {'#edf2f7' if st.session_state["dark_mode"] else '#1a202c'} !important;
 }}
 
-/* Buttons */
+/* Sidebar Buttons */
 button[kind="secondary"] {{
-    background-color: var(--color-accent);
-    color: #ffffff;
-    font-weight: 600;
-    padding: 0.6rem 1.2rem;
-    border: none;
-    border-radius: 0.6rem;
-    transition: all 0.3s ease;
+    background-color: {'#2d3748' if st.session_state["dark_mode"] else '#e2e8f0'};
+    color: {'#edf2f7' if st.session_state["dark_mode"] else '#1a202c'};
+    border: 1px solid #cbd5e0;
+    border-radius: 10px;
+    margin: 10px 0px;
+    width: 100%;
 }}
-
 button[kind="secondary"]:hover {{
-    background-color: #2563eb;
-    transform: translateY(-2px);
-    box-shadow: 0 6px 16px rgba(59, 130, 246, 0.3);
+    background-color: {'#4a5568' if st.session_state["dark_mode"] else '#cbd5e0'};
+    color: {'#e2e8f0' if st.session_state["dark_mode"] else '#1a202c'};
 }}
 
-/* Chat input box */
-.css-15zrgzn.eqr7zpz3 {{
-    background-color: { "#1f2937" if st.session_state["dark_mode"] else "#f9fafb" };
-    border: 1px solid { "#374151" if st.session_state["dark_mode"] else "#e5e7eb" };
-    color: { "#f3f4f6" if st.session_state["dark_mode"] else "#111827" };
-    border-radius: 0.5rem;
-    padding: 0.75rem;
+/* Chat Message Styling */
+.stChatMessage {{
+    display: flex;
+    width: 100%;
+    margin: 1rem 0;
+    background: none;
+}}
+.stChatMessage.user {{
+    justify-content: flex-end;
+}}
+.stChatMessage.assistant {{
+    justify-content: flex-start;
+}}
+.chat-bubble {{
+    max-width: 70%;
+    padding: 1rem 1.2rem;
+    border-radius: 1.5rem;
+    background: {('#2d3748' if st.session_state["dark_mode"] else '#ffffff')};
+    color: {('#edf2f7' if st.session_state["dark_mode"] else '#1a202c')};
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+    font-size: 1rem;
+}}
+.stChatMessage.user .chat-bubble {{
+    background: {('#4fd1c5' if st.session_state["dark_mode"] else '#c6f6d5')};
+    color: #1a202c;
+    border-bottom-right-radius: 0.3rem;
+}}
+.stChatMessage.assistant .chat-bubble {{
+    background: {('#805ad5' if st.session_state["dark_mode"] else '#e9d8fd')};
+    color: #1a202c;
+    border-bottom-left-radius: 0.3rem;
+}}
+.chat-bubble:hover {{
+    transform: scale(1.02);
+    box-shadow: 0 6px 18px rgba(0,0,0,0.2);
 }}
 
-/* Text Input */
-input[type="text"] {{
-  background-color: inherit;
-  color: inherit;
-  border: none;
-  outline: none;
-  font-size: 1rem;
+/* Chat Input Box */
+[data-testid="stChatInput"] textarea {{
+    background: {('#2d3748' if st.session_state["dark_mode"] else '#ffffff')};
+    border: 2px solid #4B0082; /* Dark Purple/Indigo border */
+    border-radius: 2rem;
+    padding: 1rem;
+    color: {('#e2e8f0' if st.session_state["dark_mode"] else '#333333')};
+    font-size: 1.1rem;
+    transition: 0.3s ease;
+}}
+[data-testid="stChatInput"] textarea:focus {{
+    border-color: {'#63b3ed' if st.session_state["dark_mode"] else '#7c3aed'};
+    outline: none;
 }}
 
-/* Scrollbar */
-::-webkit-scrollbar {{
-  width: 8px;
+/* Sidebar Chat History Items */
+section[data-testid="stSidebar"] > div > div > div:nth-child(3) {{
+    margin-top: 20px;
 }}
-::-webkit-scrollbar-thumb {{
-  background: { "#374151" if st.session_state["dark_mode"] else "#d1d5db" };
-  border-radius: 4px;
+section[data-testid="stSidebar"] .element-container:nth-child(3) div {{
+    background-color: {('#2d3748' if st.session_state["dark_mode"] else '#edf2f7')};
+    border-radius: 10px;
+    padding: 10px;
+    margin-bottom: 10px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    transition: 0.3s ease;
+    font-size: 0.9rem;
 }}
-::-webkit-scrollbar-thumb:hover {{
-  background: { "#3b82f6" };
+section[data-testid="stSidebar"] .element-container:nth-child(3) div:hover {{
+    background-color: {('#4a5568' if st.session_state["dark_mode"] else '#d1d5db')};
+    cursor: pointer;
 }}
 
-/* Loader spinner */
-.css-1v0mbdj.e1tzin5v2 {{
-  color: { "#3b82f6" };
+/* Headings and Texts */
+h1, h2, h3, h4, h5, h6 {{
+    color: {'#f8fafc' if st.session_state["dark_mode"] else '#1f2937'};
 }}
-
+p, li, span, div {{
+    color: {'#e2e8f0' if st.session_state["dark_mode"] else '#333333'};
+}}
 </style>
 """, unsafe_allow_html=True)
 
