@@ -175,7 +175,7 @@ button[kind="secondary"]:hover {{
 
 /* Chat Input Box */
 [data-testid="stChatInput"] textarea {{
-    background: {('#2d3748' if st.session_state["dark_mode"] else '#ffffff')};
+    background: linear-gradient(90deg, #6a11cb 0%, #2575fc 100%) !important;
     border: 2px solid #4B0082;
     border-radius: 2rem;
     padding: 1rem;
