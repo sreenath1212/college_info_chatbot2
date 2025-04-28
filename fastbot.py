@@ -54,7 +54,9 @@ header[data-testid="stHeader"], footer {{
     background: linear-gradient(90deg, #6a11cb 0%, #2575fc 100%) !important;
     color: #FFFFFF !important;
 }}
-footer {{ visibility: hidden; }}
+footer {{
+    visibility: hidden;
+}}
 .custom-footer {{
     position: fixed;
     bottom: 0;
@@ -64,9 +66,9 @@ footer {{ visibility: hidden; }}
     padding: 1rem 0;
     text-align: center;
     z-index: 999;
+    box-shadow: 0 -4px 6px rgba(0,0,0,0.2);
     color: white;
     font-size: 1rem;
-    box-shadow: 0 -4px 6px rgba(0,0,0,0.2);
 }}
 
 /* Custom Sticky Header */
@@ -79,9 +81,9 @@ footer {{ visibility: hidden; }}
     padding: 1rem 0;
     text-align: center;
     z-index: 999;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.2);
     margin-top: 30px;
     animation: slideDown 0.5s ease forwards;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.2);
 }}
 @keyframes slideDown {{
     0% {{ transform: translateY(-100%); }}
@@ -98,19 +100,22 @@ footer {{ visibility: hidden; }}
     margin-top: 0.3rem;
 }}
 
-/* Sidebar */
+/* Sidebar Background */
 [data-testid="stSidebar"] {{
     background-color: {{'#3a4354' if st.session_state["dark_mode"] else '#e9d8fd'}};
+    color: {{'#edf2f7' if st.session_state["dark_mode"] else '#1a202c'}};
 }}
 .stSidebarContent svg {{
     color: {{'#edf2f7' if st.session_state["dark_mode"] else '#1a202c'}} !important;
 }}
+
+/* Sidebar Buttons */
 button[kind="secondary"] {{
     background-color: {{'#2d3748' if st.session_state["dark_mode"] else '#e2e8f0'}};
     color: {{'#edf2f7' if st.session_state["dark_mode"] else '#1a202c'}};
     border: 1px solid #cbd5e0;
     border-radius: 10px;
-    margin: 10px 0;
+    margin: 10px 0px;
     width: 100%;
 }}
 button[kind="secondary"]:hover {{
@@ -124,8 +129,12 @@ button[kind="secondary"]:hover {{
     margin: 1rem 0;
     background: none;
 }}
-.stChatMessage.user {{ justify-content: flex-end; }}
-.stChatMessage.assistant {{ justify-content: flex-start; }}
+.stChatMessage.user {{
+    justify-content: flex-end;
+}}
+.stChatMessage.assistant {{
+    justify-content: flex-start;
+}}
 .chat-bubble {{
     max-width: 70%;
     padding: 1rem 1.2rem;
@@ -151,61 +160,47 @@ button[kind="secondary"]:hover {{
     box-shadow: 0 6px 18px rgba(0,0,0,0.2);
 }}
 
-/* Chat Input Footer */
-[data-testid="stChatInput"] {{
-    background: linear-gradient(90deg, #e0f7fa, #e1bee7);
-    border-top: 2px solid #b794f4;
-    padding: 0.5rem 1rem;
-    backdrop-filter: blur(10px);
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-}}
-
-/* Textarea */
+/* Chat Input Area */
 [data-testid="stChatInput"] textarea {{
-    flex: 1;
-    background-color: rgba(255, 255, 255, 0.8);
-    color: #1a202c;
-    border: 1px solid #cbd5e0;
-    border-radius: 2rem;
-    padding: 1rem 1.5rem;
+    background-color: {{'#2d3748' if st.session_state["dark_mode"] else '#ffffff'}};
+    color: {{'#edf2f7' if st.session_state["dark_mode"] else '#1a202c'}};
+    border: 1px solid {{'#4a5568' if st.session_state["dark_mode"] else '#cbd5e0'}};
+    border-radius: 1.5rem;
+    padding: 1rem;
     font-size: 1rem;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
     transition: all 0.3s ease;
     width: 100%;
-    min-height: 50px;
-    resize: none;
 }}
 [data-testid="stChatInput"] textarea:hover {{
-    box-shadow: 0 0 12px rgba(124, 58, 237, 0.2);
+    box-shadow: 0 0 10px rgba(124, 58, 237, 0.2);
 }}
 [data-testid="stChatInput"] textarea:focus {{
-    background-color: rgba(243, 244, 246, 0.9);
+    background-color: {{'#1a202c' if st.session_state["dark_mode"] else '#f3f4f6'}};
     border-color: #7c3aed;
     box-shadow: 0 0 8px rgba(124, 58, 237, 0.5);
     outline: none;
 }}
 
-/* Submit Button */
+/* Chat Submit Button */
 [data-testid="stChatInput"] button {{
     background: linear-gradient(90deg, #6a11cb 0%, #2575fc 100%);
     color: white;
     border: none;
-    border-radius: 50%;
-    height: 48px;
-    width: 48px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: background 0.3s ease, transform 0.2s ease;
+    border-radius: 1rem;
+    padding: 0.5rem 1rem;
+    font-size: 1rem;
+    margin-left: 0.5rem;
+    transition: background 0.3s ease;
 }}
 [data-testid="stChatInput"] button:hover {{
     background: linear-gradient(90deg, #5b0eb1 0%, #1a4ed8 100%);
-    transform: scale(1.1);
 }}
 
-/* Sidebar History */
+/* Sidebar Chat History Cards */
+section[data-testid="stSidebar"] > div > div > div:nth-child(3) {{
+    margin-top: 20px;
+}}
 section[data-testid="stSidebar"] .element-container:nth-child(3) div {{
     background-color: {{'#2d3748' if st.session_state["dark_mode"] else '#edf2f7'}};
     border-radius: 10px;
@@ -213,13 +208,14 @@ section[data-testid="stSidebar"] .element-container:nth-child(3) div {{
     margin-bottom: 10px;
     box-shadow: 0 2px 8px rgba(0,0,0,0.1);
     transition: 0.3s ease;
+    font-size: 0.9rem;
 }}
 section[data-testid="stSidebar"] .element-container:nth-child(3) div:hover {{
     background-color: {{'#4a5568' if st.session_state["dark_mode"] else '#d1d5db'}};
     cursor: pointer;
 }}
 
-/* Global Text */
+/* Text and Headings */
 h1, h2, h3, h4, h5, h6 {{
     color: {{'#f8fafc' if st.session_state["dark_mode"] else '#1f2937'}};
 }}
@@ -237,6 +233,7 @@ p, li, span, div {{
     Made with ❤️ by College Info Assistant
 </div>
 """, unsafe_allow_html=True)
+
 
 # (Continue your main application logic from here)
 
