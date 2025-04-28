@@ -167,25 +167,6 @@ button[kind="secondary"]:hover {{
 }}
 
 
-
-/* Actual typing box (textarea) */
-[data-testid="stChatInput"] textarea {{
-    background: #ffffff !important; /* White background */
-    border: 2px solid #6a11cb; /* Match the gradient start color */
-    border-radius: 1.5rem;
-    padding: 0.8rem 1.2rem;
-    color: #000000; /* Black text */
-    font-size: 1.05rem;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1); /* Light subtle shadow */
-    transition: border-color 0.3s ease, box-shadow 0.3s ease;
-    resize: none; /* Prevent resizing */
-}}
-
-/* Placeholder text inside the typing box */
-[data-testid="stChatInput"] textarea::placeholder {{
-    color: #999999; /* Softer gray for better readability */
-}}
-
 /* Typing box focus effect */
 [data-testid="stChatInput"] textarea:focus {{
     border-color: #7c3aed; /* Purple accent on focus */
