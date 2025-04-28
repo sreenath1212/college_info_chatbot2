@@ -19,17 +19,7 @@ st.set_page_config(
     initial_sidebar_state="auto"
 )
 
-# Force Collapse Sidebar Properly
-st.markdown(
-    """
-    <style>
-    [data-testid="stSidebar"][aria-expanded="true"] {
-        visibility: hidden;
-    }
-    </style>
-    """,
-    unsafe_allow_html=True
-)
+
 
 
 # Inject the viewport meta tag
