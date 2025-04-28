@@ -186,35 +186,66 @@ if "messages" not in st.session_state:
 
 
 # Sidebar: Chat History
+# Sidebar: Chat History
 with st.sidebar:
-
     st.header("🆕 New Chat")
     if st.button("➕ Start New Chat"):
         st.session_state["messages"] = []
+        st.session_state["selected_chat"] = None
         save_memory()
         st.rerun()
 
     st.header("🕑 Chat History")
-    if st.session_state["messages"]:
-        for idx, msg in enumerate(st.session_state["messages"]):
-            st.markdown(f"**{msg['role'].capitalize()}**: {msg['content'][:30]}...")
+    if st.session_state.get("messages"):
+        messages = st.session_state["messages"]
+
+        # Group chats (User + Assistant)
+        chats = []
+        for i in range(0, len(messages) - 1, 2):
+            user_msg = messages[i]['content'] if messages[i]['role'] == 'user' else ""
+            assistant_msg = messages[i+1]['content'] if messages[i+1]['role'] == 'assistant' else ""
+            chats.append({
+                "index": i,  # Save the starting index
+                "preview": f"**You:** {user_msg[:20]}...<br>**AI:** {assistant_msg[:20]}..."
+            })
+
+        # Display each chat as a button
+        for chat in chats:
+            if st.button(chat["preview"], key=f"chat_{chat['index']}"):
+                st.session_state["selected_chat"] = chat["index"]
+                st.rerun()
+
+        if st.button("🔙 Show Full Chat"):
+            st.session_state["selected_chat"] = None
+            st.rerun()
+
     else:
         st.markdown("*No chats yet.*")
 
     if st.button("🧹 Clear Chat"):
         st.session_state["messages"] = []
+        st.session_state["selected_chat"] = None
         save_memory()
         st.rerun()
 
     if st.button("📥 Download Chat"):
-        if st.session_state["messages"]:
+        if st.session_state.get("messages"):
             chat_text = "\n\n".join([f"{m['role'].capitalize()}: {m['content']}" for m in st.session_state["messages"]])
             st.download_button("Download as TXT", data=chat_text, file_name="chat_history.txt", mime="text/plain")
 
 # Display Messages
-for msg in st.session_state["messages"]:
+if st.session_state.get("selected_chat") is not None:
+    # Only show the selected chat (user + assistant)
+    start_idx = st.session_state["selected_chat"]
+    messages_to_show = st.session_state["messages"][start_idx:start_idx+2]  # User + Assistant
+else:
+    # Show all messages
+    messages_to_show = st.session_state.get("messages", [])
+
+for msg in messages_to_show:
     with st.chat_message(msg["role"]):
         st.markdown(f"<div class='chat-bubble'>{msg['content']}</div>", unsafe_allow_html=True)
+
 
 # User Input
 user_query = st.chat_input("Type your question here...")
