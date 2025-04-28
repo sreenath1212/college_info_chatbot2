@@ -40,6 +40,109 @@ with st.sidebar:
 st.markdown(f"""
 <style>
 
+:root {{
+    /* Light mode defaults */
+    --bg-color: #ffffff;
+    --text-color: #111827;
+    --secondary-text-color: #4b5563;
+    --primary-color: #2563eb;
+    --card-bg: #f9fafb;
+    --border-color: #e5e7eb;
+}}
+
+body.dark, .dark & {{
+    /* Dark mode overrides */
+    --bg-color: #0e1117;
+    --text-color: #f3f4f6;
+    --secondary-text-color: #9ca3af;
+    --primary-color: #3b82f6;
+    --card-bg: #1f2937;
+    --border-color: #374151;
+}}
+
+/* Apply base background and font colors */
+html, body, [data-testid="stApp"] {{
+    background-color: var(--bg-color);
+    color: var(--text-color);
+}}
+
+/* Headings and text */
+h1, h2, h3, h4, h5, h6 {{
+    color: var(--text-color);
+}}
+
+/* Card-like container for chat messages */
+.chat-bubble {{
+    background-color: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 1rem;
+    padding: 1rem;
+    margin: 0.5rem 0;
+    font-size: 1rem;
+    line-height: 1.5;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    transition: background-color 0.3s, border-color 0.3s;
+    word-wrap: break-word;
+}}
+
+/* Streamlit buttons */
+button[kind="secondary"] {{
+    background-color: var(--primary-color);
+    color: #ffffff;
+    border: none;
+    border-radius: 0.5rem;
+    padding: 0.6rem 1.2rem;
+    font-weight: 600;
+    transition: background-color 0.3s;
+}}
+
+button[kind="secondary"]:hover {{
+    background-color: #1d4ed8;
+}}
+
+/* Sidebar */
+[data-testid="stSidebar"] {{
+    background-color: var(--card-bg);
+    border-right: 1px solid var(--border-color);
+}}
+
+[data-testid="stSidebar"] h1, [data-testid="stSidebar"] h2, [data-testid="stSidebar"] h3 {{
+    color: var(--text-color);
+}}
+
+/* Sidebar elements spacing */
+.sidebar-content > * {{
+    margin-bottom: 1rem;
+}}
+
+/* Text input (chat input) */
+input[type="text"] {{
+    background-color: var(--card-bg);
+    color: var(--text-color);
+    border: 1px solid var(--border-color);
+    border-radius: 0.5rem;
+    padding: 0.5rem 1rem;
+}}
+
+/* Chat input box */
+.css-15zrgzn.eqr7zpz3 {{
+    background-color: var(--card-bg);
+    border-radius: 0.5rem;
+    border: 1px solid var(--border-color);
+}}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {{
+    width: 8px;
+}}
+::-webkit-scrollbar-thumb {{
+    background-color: var(--border-color);
+    border-radius: 4px;
+}}
+::-webkit-scrollbar-thumb:hover {{
+    background-color: var(--primary-color);
+}}
+
 </style>
 """, unsafe_allow_html=True)
 
