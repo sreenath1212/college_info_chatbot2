@@ -39,6 +39,8 @@ with st.sidebar:
         value=st.session_state["dark_mode"], 
         key="dark_mode_toggle"  # Unique key
     )
+# --- Inject dynamic CSS ---
+
 
 
 # (Continue your main application logic from here)
