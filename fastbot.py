@@ -24,17 +24,25 @@ st.markdown(
     """
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     """,
-    unsafe_allow_html=True,
+    unsafe="allow_html=True,
 )
 
-# --- Dark Mode setup ---
 if "dark_mode" not in st.session_state:
     st.session_state["dark_mode"] = False
 
-# Sidebar - Settings
-with st.sidebar:
-    st.markdown("## ⚙️ Settings")
-    st.session_state["dark_mode"] = st.toggle("🌙 Dark Mode", value=st.session_state["dark_mode"], key="dark_mode_toggle") # Added a unique key
+if "show_settings" not in st.session_state:
+    st.session_state["show_settings"] = False
+
+if "show_sidebar" not in st.session_state:
+    st.session_state["show_sidebar"] = False
+
+if st.sidebar.toggle("⚙️ Show Settings", value=st.session_state["show_settings"], key="show_settings"):
+    with st.sidebar:
+        st.markdown("## ⚙️ Settings")
+        st.session_state["dark_mode"] = st.toggle("🌙 Dark Mode", value=st.session_state["dark_mode"], key="dark_mode_toggle")
+else:
+    with st.sidebar:
+        pass  # You can add some text here like "Settings are hidden"
 
 # Inject dynamic CSS based on mode
 st.markdown(f"""
@@ -312,24 +320,27 @@ if "messages" not in st.session_state:
 st.title("🎓 College Info Assistant")
 st.markdown("##### Ask anything about colleges — accurate, fast, and friendly!")
 
-# Sidebar: Chat History
-with st.sidebar:
-    st.header("🕑 Chat History")
-    if st.session_state["messages"]:
-        for idx, msg in enumerate(st.session_state["messages"]):
-            st.markdown(f"**{msg['role'].capitalize()}**: {msg['content'][:30]}...")
-    else:
-        st.markdown("*No chats yet.*")
+if st.sidebar.button("Show/Hide Chat History"):
+    st.session_state["show_sidebar"] = not st.session_state.get("show_sidebar", False)
 
-    if st.button("🧹 Clear Chat"):
-        st.session_state["messages"] = []
-        save_memory()
-        st.rerun()
-
-    if st.button("📥 Download Chat"):
+if st.session_state.get("show_sidebar", False):
+    with st.sidebar:
+        st.header("🕑 Chat History")
         if st.session_state["messages"]:
-            chat_text = "\n\n".join([f"{m['role'].capitalize()}: {m['content']}" for m in st.session_state["messages"]])
-            st.download_button("Download as TXT", data=chat_text, file_name="chat_history.txt", mime="text/plain")
+            for idx, msg in enumerate(st.session_state["messages"]):
+                st.markdown(f"**{msg['role'].capitalize()}**: {msg['content'][:30]}...")
+        else:
+            st.markdown("*No chats yet.*")
+
+        if st.button("🧹 Clear Chat"):
+            st.session_state["messages"] = []
+            save_memory()
+            st.rerun()
+
+        if st.button("📥 Download Chat"):
+            if st.session_state["messages"]:
+                chat_text = "\n\n".join([f"{m['role'].capitalize()}: {m['content']}" for m in st.session_state["messages"]])
+                st.download_button("Download as TXT", data=chat_text, file_name="chat_history.txt", mime="text/plain")
 
 # Display Messages
 for msg in st.session_state["messages"]:
