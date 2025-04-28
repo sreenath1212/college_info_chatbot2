@@ -41,6 +41,7 @@ with st.sidebar:
     )
 
 # --- Inject dynamic CSS ---
+# --- Inject dynamic CSS ---
 st.markdown(f"""
 <style>
 /* Main App Container Background */
@@ -55,7 +56,7 @@ header[data-testid="stHeader"], footer {{
     color: #FFFFFF !important;
 }}
 
-}}
+/* Proper Footer Styling */
 footer {{
     position: fixed;
     bottom: 0;
@@ -63,7 +64,7 @@ footer {{
     z-index: 1000;
     padding: 10px;
     text-align: center;
-    background: linear-gradient(90deg, #6a11cb 0%, #2575fc 100%); /* MATCH HEADER */
+    background: linear-gradient(90deg, #6a11cb 0%, #2575fc 100%) !important;
     color: #ffffff;
     font-size: 1rem;
     box-shadow: 0 -4px 6px rgba(0,0,0,0.2);
@@ -156,6 +157,13 @@ button[kind="secondary"]:hover {{
     box-shadow: 0 6px 18px rgba(0,0,0,0.2);
 }}
 
+/* Chat Input Area Full Fix */
+div.stChatInputContainer {{
+    background: linear-gradient(90deg, #6a11cb 0%, #2575fc 100%) !important;
+    padding: 1rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+}}
+
 /* Chat Input Box */
 [data-testid="stChatInput"] textarea {{
     background: {('#2d3748' if st.session_state["dark_mode"] else '#ffffff')};
@@ -203,6 +211,7 @@ p, li, span, div {{
     <p>Ask anything about colleges — accurate, fast, and friendly!</p>
 </div>
 """, unsafe_allow_html=True)
+
 
 # (Continue your main application logic from here)
 
