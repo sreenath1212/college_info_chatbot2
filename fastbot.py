@@ -56,19 +56,26 @@ header[data-testid="stHeader"], footer {{
     color: #FFFFFF !important;
 }}
 
-/* Proper Footer Styling */
+/* Proper Footer Styling - Hide Streamlit Default Footer */
 footer {{
+    visibility: hidden;
+}}
+
+/* Custom Footer */
+.custom-footer {{
     position: fixed;
     bottom: 0;
+    left: 0;
     width: 100%;
-    z-index: 1000;
-    padding: 10px;
+    background: linear-gradient(90deg, #6a11cb 0%, #2575fc 100%);
+    padding: 1rem 0;
     text-align: center;
-    background: linear-gradient(90deg, #6a11cb 0%, #2575fc 100%) !important;
-    color: #ffffff;
-    font-size: 1rem;
+    z-index: 999;
     box-shadow: 0 -4px 6px rgba(0,0,0,0.2);
+    color: white;
+    font-size: 1rem;
 }}
+
 
 /* Custom Sticky Header */
 .custom-header {{
@@ -210,6 +217,11 @@ p, li, span, div {{
     <h1>🎓 College Info Assistant</h1>
     <p>Ask anything about colleges — accurate, fast, and friendly!</p>
 </div>
+
+<div class="custom-footer">
+    Made with ❤️ by College Info Assistant
+</div>
+
 """, unsafe_allow_html=True)
 
 
