@@ -53,6 +53,12 @@ MODEL = 'google/gemini-2.0-flash-exp:free'
 if "api_key_index" not in st.session_state:
     st.session_state["api_key_index"] = 0
 
+if "conversations" not in st.session_state:
+    st.session_state["conversations"] = []
+    st.session_state["current_messages"] = []  # Messages in current chat
+    st.session_state["selected_conversation"] = None
+
+
 # --- Utility Functions ---
 
 def clean_field_name(field_name):
@@ -191,9 +197,13 @@ if "messages" not in st.session_state:
 with st.sidebar:
     st.header("🆕 New Chat")
     if st.button("➕ Start New Chat"):
-        st.session_state["messages"] = []
-        st.session_state["selected_chat"] = None
-        save_memory()
+        if st.session_state["current_messages"]:
+            st.session_state["conversations"].append({
+                "messages": st.session_state["current_messages"],
+                "timestamp": datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            })
+        st.session_state["current_messages"] = []
+        st.session_state["selected_conversation"] = None
         st.rerun()
 
     st.header("🕑 Chat History")
@@ -254,7 +264,8 @@ user_query = st.chat_input("Type your question here...")
 
 if user_query:
     timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    st.session_state["messages"].append({"role": "user", "content": user_query, "timestamp": timestamp})
+    st.session_state["current_messages"].append({"role": "user", "content": user_query, "timestamp": timestamp})
+
 
     with st.chat_message("user"):
         st.markdown(f"<div class='chat-bubble'>{user_query}</div>", unsafe_allow_html=True)
@@ -271,6 +282,7 @@ if user_query:
             answer_placeholder.markdown(f"<div class='chat-bubble'>{final_answer}</div>", unsafe_allow_html=True)
             time.sleep(0.01)
 
-    st.session_state["messages"].append({"role": "assistant", "content": raw_answer, "timestamp": timestamp})
+    st.session_state["current_messages"].append({"role": "assistant", "content": raw_answer, "timestamp": timestamp})
+
 
     save_memory()
