@@ -311,15 +311,16 @@ if "messages" not in st.session_state:
 
 st.markdown(
     """
-    <div style="position: fixed; top: 0; width: 100%; background-color: #0e1117; padding: 10px 0; z-index: 1000; text-align: center;">
+    <div style="position: fixed; top: 3.5rem; width: 100%; background-color: #0e1117; padding: 10px 0; z-index: 1000; text-align: center;">
         <h1 style="margin: 0; font-size: 28px; color: white;">🎓 College Info Assistant</h1>
         <p style="margin: 0; font-size: 16px; color: #cccccc;">Ask anything about colleges — accurate, fast, and friendly!</p>
         <hr style="margin-top:10px; border:1px solid #333;">
     </div>
-    <br><br><br><br>
+    <br><br><br><br><br><br>
     """,
     unsafe_allow_html=True,
 )
+
 
 
 # Sidebar: Chat History
