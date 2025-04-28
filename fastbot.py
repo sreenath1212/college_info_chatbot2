@@ -10,7 +10,6 @@ import requests
 import os
 import time
 import json
-import datetime
 
 # --- MUST BE FIRST: Streamlit page config ---
 st.set_page_config(
@@ -28,16 +27,249 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
-# ===== ADD YOUR APP TITLE HERE =====
-st.markdown(
-    """
-    <h1 style='text-align: center; font-size: 3em; margin-bottom: 0.5em;'>
-        🎓 College Information Assistant
-    </h1>
-    """,
-    unsafe_allow_html=True
-)
+# --- Dark Mode setup ---
+if "dark_mode" not in st.session_state:
+    st.session_state["dark_mode"] = False
 
+# Sidebar - Settings
+with st.sidebar:
+    st.markdown("## ⚙️ Settings")
+    st.session_state["dark_mode"] = st.toggle(
+        "🌙 Dark Mode", 
+        value=st.session_state["dark_mode"], 
+        key="dark_mode_toggle"  # Unique key
+    )
+
+# --- Inject dynamic CSS ---
+# --- Inject dynamic CSS ---
+st.markdown(f"""
+<style>
+/* Main App Container Background */
+[data-testid="stAppViewContainer"] {{
+    background: linear-gradient(to right, {('#0f2027, #203a43, #2c5364') if st.session_state["dark_mode"] else '#e0f7fa, #e1bee7'});
+    padding-top: 7rem; /* Reduced for better top spacing */
+}}
+
+/* Top and Bottom Bars */
+header[data-testid="stHeader"], footer {{
+    background: linear-gradient(90deg, #6a11cb 0%, #2575fc 100%) !important;
+    color: #FFFFFF !important;
+}}
+
+/* Proper Footer Styling - Hide Streamlit Default Footer */
+footer {{
+    visibility: hidden;
+}}
+
+/* Custom Footer */
+.custom-footer {{
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background: linear-gradient(90deg, #6a11cb 0%, #2575fc 100%);
+    padding: 1rem 0;
+    text-align: center;
+    z-index: 999;
+    box-shadow: 0 -4px 6px rgba(0,0,0,0.2);
+    color: white;
+    font-size: 1rem;
+}}
+
+
+/* Custom Sticky Header */
+.custom-header {{
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background: linear-gradient(90deg, #6a11cb 0%, #2575fc 100%);
+    padding: 1rem 0;
+    text-align: center;
+    z-index: 999;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+    margin-top: 30px;
+    animation: slideDown 0.5s ease forwards;
+}}
+@keyframes slideDown {{
+    0% {{transform: translateY(-100%);}}
+    100% {{transform: translateY(0);}}
+}}
+.custom-header h1 {{
+    color: white;
+    font-size: 2.3rem;
+    margin: 0;
+}}
+.custom-header p {{
+    color: #e0e0e0;
+    font-size: 1.1rem;
+    margin-top: 0.3rem;
+}}
+
+/* Sidebar Background and Elements */
+[data-testid="stSidebar"] {{
+    background-color: {('#3a4354' if st.session_state["dark_mode"] else '#e9d8fd')};
+    color: {('#edf2f7' if st.session_state["dark_mode"] else '#1a202c')};
+}}
+.stSidebarContent svg {{
+    color: {('#edf2f7' if st.session_state["dark_mode"] else '#1a202c')} !important;
+}}
+button[kind="secondary"] {{
+    background-color: {('#2d3748' if st.session_state["dark_mode"] else '#e2e8f0')};
+    color: {('#edf2f7' if st.session_state["dark_mode"] else '#1a202c')};
+    border: 1px solid #cbd5e0;
+    border-radius: 10px;
+    margin: 10px 0px;
+    width: 100%;
+}}
+button[kind="secondary"]:hover {{
+    background-color: {('#4a5568' if st.session_state["dark_mode"] else '#cbd5e0')};
+}}
+
+
+
+/* Chat Message Styling */
+.stChatMessage {{
+    display: flex;
+    width: 100%;
+    margin: 1rem 0;
+    background: none;
+}}
+.stChatMessage.user {{
+    justify-content: flex-end;
+}}
+.stChatMessage.assistant {{
+    justify-content: flex-start;
+}}
+.chat-bubble {{
+    max-width: 70%;
+    padding: 1rem 1.2rem;
+    border-radius: 1.5rem;
+    background: {('#2d3748' if st.session_state["dark_mode"] else '#ffffff')};
+    color: {('#edf2f7' if st.session_state["dark_mode"] else '#1a202c')};
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+    font-size: 1rem;
+}}
+.stChatMessage.user .chat-bubble {{
+    background: {('#4fd1c5' if st.session_state["dark_mode"] else '#c6f6d5')};
+    color: #1a202c;
+    border-bottom-right-radius: 0.3rem;
+}}
+.stChatMessage.assistant .chat-bubble {{
+    background: {('#805ad5' if st.session_state["dark_mode"] else '#e9d8fd')};
+    color: #1a202c;
+    border-bottom-left-radius: 0.3rem;
+}}
+.chat-bubble:hover {{
+    transform: scale(1.02);
+    box-shadow: 0 6px 18px rgba(0,0,0,0.2);
+}}
+
+/* Chat Input Footer */
+[data-testid="stChatInput"] {{
+    background: linear-gradient(90deg, #e0f7fa, #e1bee7);
+    border-top: 2px solid #b794f4;
+    padding: 0.5rem 1rem;
+    backdrop-filter: blur(10px);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}}
+
+/* Textarea */
+[data-testid="stChatInput"] textarea {{
+    flex: 1;
+    background-color: rgba(255, 255, 255, 0.8);
+    color: #1a202c;
+    border: 1px solid #cbd5e0;
+    border-radius: 2rem;
+    padding: 1rem 1.5rem;
+    font-size: 1rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+    width: 100%;
+    min-height: 50px;
+    resize: none;
+}}
+
+[data-testid="stChatInput"] textarea:hover {{
+    box-shadow: 0 0 12px rgba(124, 58, 237, 0.2);
+}}
+[data-testid="stChatInput"] textarea:focus {{
+    background-color: rgba(243, 244, 246, 0.9);
+    border-color: #7c3aed;
+    box-shadow: 0 0 8px rgba(124, 58, 237, 0.5);
+    outline: none;
+}}
+
+/* Submit Button */
+[data-testid="stChatInput"] button {{
+    background: linear-gradient(90deg, #6a11cb 0%, #2575fc 100%);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    height: 48px;
+    width: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.3s ease, transform 0.2s ease;
+}}
+[data-testid="stChatInput"] button:hover {{
+    background: linear-gradient(90deg, #5b0eb1 0%, #1a4ed8 100%);
+    transform: scale(1.1);
+}}
+
+
+/* Typing box focus effect */
+[data-testid="stChatInput"] textarea:focus {{
+    border-color: #7c3aed; /* Purple accent on focus */
+    box-shadow: 0 0 8px rgba(124, 58, 237, 0.5); /* Glow on focus */
+    outline: none;
+}}
+
+
+/* Sidebar Chat History Items */
+section[data-testid="stSidebar"] > div > div > div:nth-child(3) {{
+    margin-top: 20px;
+}}
+section[data-testid="stSidebar"] .element-container:nth-child(3) div {{
+    background-color: {('#2d3748' if st.session_state["dark_mode"] else '#edf2f7')};
+    border-radius: 10px;
+    padding: 10px;
+    margin-bottom: 10px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    transition: 0.3s ease;
+    font-size: 0.9rem;
+}}
+section[data-testid="stSidebar"] .element-container:nth-child(3) div:hover {{
+    background-color: {('#4a5568' if st.session_state["dark_mode"] else '#d1d5db')};
+    cursor: pointer;
+}}
+
+/* Text and Headings */
+h1, h2, h3, h4, h5, h6 {{
+    color: {('#f8fafc' if st.session_state["dark_mode"] else '#1f2937')};
+}}
+p, li, span, div {{
+    color: {('#e2e8f0' if st.session_state["dark_mode"] else '#333333')};
+}}
+</style>
+
+<div class="custom-header">
+    <h1>🎓 College Info Assistant</h1>
+    <p>Ask anything about colleges — accurate, fast, and friendly!</p>
+</div>
+
+<div class="custom-footer">
+    Made with ❤️ by College Info Assistant
+</div>
+
+""", unsafe_allow_html=True)
+
+
+# (Continue your main application logic from here)
 
 # --- Configuration ---
 CSV_FILE = 'cleaned_dataset.csv'
@@ -52,12 +284,6 @@ MODEL = 'google/gemini-2.0-flash-exp:free'
 
 if "api_key_index" not in st.session_state:
     st.session_state["api_key_index"] = 0
-
-if "conversations" not in st.session_state:
-    st.session_state["conversations"] = []
-    st.session_state["current_messages"] = []  # Messages in current chat
-    st.session_state["selected_conversation"] = None
-
 
 # --- Utility Functions ---
 
@@ -193,79 +419,34 @@ if "messages" not in st.session_state:
 
 
 # Sidebar: Chat History
-# Sidebar: Chat History
 with st.sidebar:
-    st.header("🆕 New Chat")
-    if st.button("➕ Start New Chat"):
-        if st.session_state["current_messages"]:
-            st.session_state["conversations"].append({
-                "messages": st.session_state["current_messages"],
-                "timestamp": datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-            })
-        st.session_state["current_messages"] = []
-        st.session_state["selected_conversation"] = None
-        st.rerun()
-
     st.header("🕑 Chat History")
-    if st.session_state.get("messages"):
-        messages = st.session_state["messages"]
-
-        # Group chats (User + Assistant)
-        chats = []
-        for i in range(0, len(messages) - 1, 2):
-            user_msg = messages[i]['content'] if messages[i]['role'] == 'user' else ""
-            assistant_msg = messages[i+1]['content'] if messages[i+1]['role'] == 'assistant' else ""
-            timestamp = messages[i].get('timestamp', '')  # Get saved timestamp
-            chat_preview = f"**{timestamp}**<br>🧑 {user_msg[:20]}...<br>🤖 {assistant_msg[:20]}..."
-            chats.append({
-                "index": i,
-                "preview": chat_preview
-            })
-
-        for chat in chats:
-            if st.button(chat["preview"], key=f"chat_{chat['index']}"):
-                st.session_state["selected_chat"] = chat["index"]
-                st.rerun()
-
-        if st.button("🔙 Show Full Chat"):
-            st.session_state["selected_chat"] = None
-            st.rerun()
-
+    if st.session_state["messages"]:
+        for idx, msg in enumerate(st.session_state["messages"]):
+            st.markdown(f"**{msg['role'].capitalize()}**: {msg['content'][:30]}...")
     else:
         st.markdown("*No chats yet.*")
 
     if st.button("🧹 Clear Chat"):
         st.session_state["messages"] = []
-        st.session_state["selected_chat"] = None
         save_memory()
         st.rerun()
 
     if st.button("📥 Download Chat"):
-        if st.session_state.get("messages"):
+        if st.session_state["messages"]:
             chat_text = "\n\n".join([f"{m['role'].capitalize()}: {m['content']}" for m in st.session_state["messages"]])
             st.download_button("Download as TXT", data=chat_text, file_name="chat_history.txt", mime="text/plain")
 
 # Display Messages
-if st.session_state.get("selected_chat") is not None:
-    # Only show the selected chat (user + assistant)
-    start_idx = st.session_state["selected_chat"]
-    messages_to_show = st.session_state["messages"][start_idx:start_idx+2]  # User + Assistant
-else:
-    # Show all messages
-    messages_to_show = st.session_state.get("messages", [])
-
-for msg in messages_to_show:
+for msg in st.session_state["messages"]:
     with st.chat_message(msg["role"]):
         st.markdown(f"<div class='chat-bubble'>{msg['content']}</div>", unsafe_allow_html=True)
-
 
 # User Input
 user_query = st.chat_input("Type your question here...")
 
 if user_query:
-    timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    st.session_state["current_messages"].append({"role": "user", "content": user_query, "timestamp": timestamp})
-
+    st.session_state["messages"].append({"role": "user", "content": user_query})
 
     with st.chat_message("user"):
         st.markdown(f"<div class='chat-bubble'>{user_query}</div>", unsafe_allow_html=True)
@@ -282,7 +463,5 @@ if user_query:
             answer_placeholder.markdown(f"<div class='chat-bubble'>{final_answer}</div>", unsafe_allow_html=True)
             time.sleep(0.01)
 
-    st.session_state["current_messages"].append({"role": "assistant", "content": raw_answer, "timestamp": timestamp})
-
-
+    st.session_state["messages"].append({"role": "assistant", "content": raw_answer})
     save_memory()
