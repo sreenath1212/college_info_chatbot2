@@ -34,86 +34,81 @@ if "dark_mode" not in st.session_state:
 # Sidebar - Settings
 with st.sidebar:
     st.markdown("## ⚙️ Settings")
-    st.session_state["dark_mode"] = st.toggle("🌙 Dark Mode", value=st.session_state["dark_mode"], key="dark_mode_toggle") # Added a unique key
+    st.session_state["dark_mode"] = st.toggle(
+        "🌙 Dark Mode", 
+        value=st.session_state["dark_mode"], 
+        key="dark_mode_toggle"  # Unique key
+    )
 
-# Inject dynamic CSS based on mode
+# --- Inject dynamic CSS ---
 st.markdown(f"""
 <style>
 /* Main App Container Background */
 [data-testid="stAppViewContainer"] {{
-    background: linear-gradient(to right, {('#0f2027, #203a43, #2c5364') if st.session_state["dark_mode"] else ('#e0f7fa, #e1bee7')});
-    padding-top: 8rem; /* Push content below fixed header */
+    background: linear-gradient(to right, {('#0f2027, #203a43, #2c5364') if st.session_state["dark_mode"] else '#e0f7fa, #e1bee7'});
+    padding-top: 7rem; /* Reduced for better top spacing */
 }}
 
 /* Top and Bottom Bars */
-header[data-testid="stHeader"], footer {{ 
-    background-color: #4B0082 !important; 
-    color: #FFFFFF !important; 
+header[data-testid="stHeader"], footer {{
+    background-color: #4B0082 !important;
+    color: #FFFFFF !important;
 }}
-
 footer {{
     position: fixed;
     bottom: 0;
     width: 100%;
-    z-index: 1000; 
+    z-index: 1000;
     padding: 10px;
     text-align: center;
 }}
 
-/* Custom Sticky Top Header */
-.custom-header {{    position: fixed;
-    top: 1rem; /* instead of 3.5rem */
+/* Custom Sticky Header */
+.custom-header {{
+    position: fixed;
+    top: 0;
+    left: 0;
     width: 100%;
     background: linear-gradient(90deg, #6a11cb 0%, #2575fc 100%);
-    color: white;
+    padding: 1rem 0;
     text-align: center;
-    padding: 10px 0;
-    z-index: 1000;
-    border-radius: 0 0 20px 20px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+    z-index: 999;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+    animation: slideDown 0.5s ease forwards;
 }}
-
-
 @keyframes slideDown {{
     0% {{transform: translateY(-100%);}}
     100% {{transform: translateY(0);}}
 }}
-
 .custom-header h1 {{
     color: white;
-    font-size: 2.5rem;
+    font-size: 2.3rem;
     margin: 0;
 }}
-
 .custom-header p {{
     color: #e0e0e0;
-    font-size: 1.2rem;
-    margin-top: 0.5rem;
+    font-size: 1.1rem;
+    margin-top: 0.3rem;
 }}
 
-/* Sidebar Background and Font */
+/* Sidebar Background and Elements */
 [data-testid="stSidebar"] {{
-    background-color: {('#3a4354' if st.session_state["dark_mode"] else '#e9d8fd')}; 
-    color: {'#edf2f7' if st.session_state["dark_mode"] else '#1a202c'};
+    background-color: {('#3a4354' if st.session_state["dark_mode"] else '#e9d8fd')};
+    color: {('#edf2f7' if st.session_state["dark_mode"] else '#1a202c')};
 }}
-
-/* Sidebar Elements (Dark Mode Toggle, etc.) */
 .stSidebarContent svg {{
-    color: {'#edf2f7' if st.session_state["dark_mode"] else '#1a202c'} !important;
+    color: {('#edf2f7' if st.session_state["dark_mode"] else '#1a202c')} !important;
 }}
-
-/* Sidebar Buttons */
 button[kind="secondary"] {{
-    background-color: {'#2d3748' if st.session_state["dark_mode"] else '#e2e8f0'};
-    color: {'#edf2f7' if st.session_state["dark_mode"] else '#1a202c'};
+    background-color: {('#2d3748' if st.session_state["dark_mode"] else '#e2e8f0')};
+    color: {('#edf2f7' if st.session_state["dark_mode"] else '#1a202c')};
     border: 1px solid #cbd5e0;
     border-radius: 10px;
     margin: 10px 0px;
     width: 100%;
 }}
 button[kind="secondary"]:hover {{
-    background-color: {'#4a5568' if st.session_state["dark_mode"] else '#cbd5e0'};
-    color: {'#e2e8f0' if st.session_state["dark_mode"] else '#1a202c'};
+    background-color: {('#4a5568' if st.session_state["dark_mode"] else '#cbd5e0')};
 }}
 
 /* Chat Message Styling */
@@ -157,7 +152,7 @@ button[kind="secondary"]:hover {{
 /* Chat Input Box */
 [data-testid="stChatInput"] textarea {{
     background: {('#2d3748' if st.session_state["dark_mode"] else '#ffffff')};
-    border: 2px solid #4B0082; 
+    border: 2px solid #4B0082;
     border-radius: 2rem;
     padding: 1rem;
     color: {('#e2e8f0' if st.session_state["dark_mode"] else '#333333')};
@@ -165,7 +160,7 @@ button[kind="secondary"]:hover {{
     transition: 0.3s ease;
 }}
 [data-testid="stChatInput"] textarea:focus {{
-    border-color: {'#63b3ed' if st.session_state["dark_mode"] else '#7c3aed'};
+    border-color: {('#63b3ed' if st.session_state["dark_mode"] else '#7c3aed')};
     outline: none;
 }}
 
@@ -187,12 +182,12 @@ section[data-testid="stSidebar"] .element-container:nth-child(3) div:hover {{
     cursor: pointer;
 }}
 
-/* Headings and Texts */
+/* Text and Headings */
 h1, h2, h3, h4, h5, h6 {{
-    color: {'#f8fafc' if st.session_state["dark_mode"] else '#1f2937'};
+    color: {('#f8fafc' if st.session_state["dark_mode"] else '#1f2937')};
 }}
 p, li, span, div {{
-    color: {'#e2e8f0' if st.session_state["dark_mode"] else '#333333'};
+    color: {('#e2e8f0' if st.session_state["dark_mode"] else '#333333')};
 }}
 </style>
 
@@ -202,9 +197,7 @@ p, li, span, div {{
 </div>
 """, unsafe_allow_html=True)
 
-# (The rest of your code is perfect and continues exactly as you posted: loading csv, memory, chat handling, OpenRouter API calls, etc.)
-
-
+# (Continue your main application logic from here)
 
 # --- Configuration ---
 CSV_FILE = 'cleaned_dataset.csv'
