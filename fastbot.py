@@ -161,29 +161,41 @@ button[kind="secondary"]:hover {{
     box-shadow: 0 6px 18px rgba(0,0,0,0.2);
 }}
 
-/* Chat Input Area */
+/* Chat Input Area Background */
+[data-testid="stChatInput"] {{
+    background: linear-gradient(90deg, #e0f7fa, #e1bee7);  /* Same as page gradient */
+    border-top: 2px solid #b794f4; /* Light purple border */
+    padding: 1rem;
+    backdrop-filter: blur(10px); /* Slight blur for elegance */
+    position: relative;
+    z-index: 999;
+}}
+
+/* Chat Input TextArea */
 [data-testid="stChatInput"] textarea {{
-    background-color: {{'#2d3748' if st.session_state["dark_mode"] else '#ffffff'}};
-    color: {{'#edf2f7' if st.session_state["dark_mode"] else '#1a202c'}};
-    border: 1px solid {{'#4a5568' if st.session_state["dark_mode"] else '#cbd5e0'}};
+    background-color: rgba(255, 255, 255, 0.8);
+    color: #1a202c;
+    border: 1px solid #cbd5e0;
     border-radius: 1.5rem;
     padding: 1rem;
     font-size: 1rem;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
     transition: all 0.3s ease;
     width: 100%;
 }}
+
+/* Chat Input Hover and Focus */
 [data-testid="stChatInput"] textarea:hover {{
-    box-shadow: 0 0 10px rgba(124, 58, 237, 0.2);
+    box-shadow: 0 0 12px rgba(124, 58, 237, 0.2);
 }}
 [data-testid="stChatInput"] textarea:focus {{
-    background-color: {{'#1a202c' if st.session_state["dark_mode"] else '#f3f4f6'}};
+    background-color: rgba(243, 244, 246, 0.9);
     border-color: #7c3aed;
     box-shadow: 0 0 8px rgba(124, 58, 237, 0.5);
     outline: none;
 }}
 
-/* Chat Submit Button */
+/* Submit Button Styling */
 [data-testid="stChatInput"] button {{
     background: linear-gradient(90deg, #6a11cb 0%, #2575fc 100%);
     color: white;
@@ -197,6 +209,9 @@ button[kind="secondary"]:hover {{
 [data-testid="stChatInput"] button:hover {{
     background: linear-gradient(90deg, #5b0eb1 0%, #1a4ed8 100%);
 }}
+
+
+
 
 /* Sidebar Chat History Cards */
 section[data-testid="stSidebar"] > div > div > div:nth-child(3) {{
