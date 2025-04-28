@@ -27,6 +27,35 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
+# Mobile-friendly CSS
+st.markdown(
+    """
+    <style>
+    /* Make chat bubbles responsive */
+    .chat-bubble {
+        max-width: 100%;
+        padding: 0.75rem;
+        margin: 0.5rem 0;
+        border-radius: 1rem;
+        background: #f1f1f1;
+        word-wrap: break-word;
+        overflow-wrap: break-word;
+    }
+    @media (max-width: 768px) {
+        /* Adjust layout for small devices */
+        .block-container {
+            padding: 1rem;
+        }
+        .stSidebar {
+            display: none;
+        }
+    }
+    </style>
+    """,
+    unsafe_allow_html=True
+)
+
+
 # --- Configuration ---
 CSV_FILE = 'cleaned_dataset.csv'
 TXT_FILE = 'institution_descriptions.txt'
@@ -176,6 +205,13 @@ if "messages" not in st.session_state:
 
 # Sidebar: Chat History
 with st.sidebar:
+
+    st.header("🆕 New Chat")
+    if st.button("➕ Start New Chat"):
+        st.session_state["messages"] = []
+        save_memory()
+        st.rerun()
+
     st.header("🕑 Chat History")
     if st.session_state["messages"]:
         for idx, msg in enumerate(st.session_state["messages"]):
