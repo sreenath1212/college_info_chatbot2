@@ -126,6 +126,14 @@ button[kind="secondary"]:hover {{
     background-color: {('#4a5568' if st.session_state["dark_mode"] else '#cbd5e0')};
 }}
 
+/* Chat Input Area Full Fix */
+[data-testid="stChatInputContainer"] {{
+    background: linear-gradient(90deg, #6a11cb 0%, #2575fc 100%) !important;
+    padding: 1rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+}}
+
+
 /* Chat Message Styling */
 .stChatMessage {{
     display: flex;
