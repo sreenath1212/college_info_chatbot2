@@ -166,36 +166,38 @@ button[kind="secondary"]:hover {{
     box-shadow: 0 6px 18px rgba(0,0,0,0.2);
 }}
 
-/* Chat input container (background gradient) */
-[data-testid="stChatInputContainer"] {{
+/* Chat input container with a smooth background gradient */
+[data-testid="stChatInputContainer"] {
     background: linear-gradient(90deg, #6a11cb 0%, #2575fc 100%) !important;
-    padding: 1rem;
+    padding: 1rem 1.5rem;
     border-top: 1px solid rgba(255, 255, 255, 0.2);
-}}
+}
 
 /* Actual typing box (textarea) */
-[data-testid="stChatInput"] textarea {{
-    background: #ffffff !important; /* WHITE background */
-    border: 2px solid #4B0082;
-    border-radius: 2rem;
-    padding: 1rem;
-    color: #000000; /* Black text inside */
-    font-size: 1.1rem;
-    transition: 0.3s ease;
-    box-shadow: none;
-}}
+[data-testid="stChatInput"] textarea {
+    background: #ffffff !important; /* White background */
+    border: 2px solid #6a11cb; /* Match the gradient start color */
+    border-radius: 1.5rem;
+    padding: 0.8rem 1.2rem;
+    color: #000000; /* Black text */
+    font-size: 1.05rem;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1); /* Light subtle shadow */
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    resize: none; /* Prevent resizing */
+}
 
 /* Placeholder text inside the typing box */
-[data-testid="stChatInput"] textarea::placeholder {{
-    color: #666666; /* Gray placeholder text */
-}}
+[data-testid="stChatInput"] textarea::placeholder {
+    color: #999999; /* Softer gray for better readability */
+}
 
-
-}}
-[data-testid="stChatInput"] textarea:focus {{
-    border-color: {('#63b3ed' if st.session_state["dark_mode"] else '#7c3aed')};
+/* Typing box focus effect */
+[data-testid="stChatInput"] textarea:focus {
+    border-color: #7c3aed; /* Purple accent on focus */
+    box-shadow: 0 0 8px rgba(124, 58, 237, 0.5); /* Glow on focus */
     outline: none;
-}}
+}
+
 
 /* Sidebar Chat History Items */
 section[data-testid="stSidebar"] > div > div > div:nth-child(3) {{
