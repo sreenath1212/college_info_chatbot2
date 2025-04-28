@@ -27,21 +27,7 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
-# --- Dark Mode setup ---
-if "dark_mode" not in st.session_state:
-    st.session_state["dark_mode"] = False
-
-# Sidebar - Settings
-with st.sidebar:
-    st.markdown("## ⚙️ Settings")
-    st.session_state["dark_mode"] = st.toggle(
-        "🌙 Dark Mode", 
-        value=st.session_state["dark_mode"], 
-        key="dark_mode_toggle"  # Unique key
-    )
-# --- Inject dynamic CSS ---
-
-
+ 
 
 # (Continue your main application logic from here)
 
@@ -184,10 +170,13 @@ generate_metadata_from_csv(CSV_FILE, TXT_FILE)
 model, texts, index = load_data_and_embeddings()
 TOP_K = len(texts)
 
-if not st.session_state["messages"]:
-    welcome_message = "👋 Hello! How can I help you today? I can assist you with any college information you need."
-    st.session_state["messages"].append({"role": "assistant", "content": welcome_message})
-    save_memory()
+if "messages" not in st.session_state:
+    st.session_state["messages"] = []
+    load_memory()
+
+
+
+
 
 # Sidebar: Chat History
 with st.sidebar:
