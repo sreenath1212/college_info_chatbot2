@@ -37,12 +37,11 @@ with st.sidebar:
     st.session_state["dark_mode"] = st.toggle("🌙 Dark Mode", value=st.session_state["dark_mode"], key="dark_mode_toggle") # Added a unique key
 
 # Inject dynamic CSS based on mode
-
 st.markdown(f"""
 <style>
 /* Main App Container Background */
 [data-testid="stAppViewContainer"] {{
-    background: linear-gradient(to right, {('#0f2027, #203a43, #2c5364') if st.session_state["dark_mode"] else '#e0f7fa, #e1bee7'});
+    background: linear-gradient(to right, {('#0f2027, #203a43, #2c5364') if st.session_state["dark_mode"] else ('#e0f7fa, #e1bee7')});
     padding-top: 8rem; /* Push content below fixed header */
 }}
 
@@ -203,7 +202,7 @@ p, li, span, div {{
 </div>
 """, unsafe_allow_html=True)
 
-
+# (The rest of your code is perfect and continues exactly as you posted: loading csv, memory, chat handling, OpenRouter API calls, etc.)
 
 
 
