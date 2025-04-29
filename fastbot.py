@@ -260,7 +260,14 @@ At the end of the conversation not the first time messages like "hi", ask the us
             return f"❌ Error contacting OpenRouter: {e}"
 
 # --- Memory persistence ---
-MEMORY_FILE = f"chat_memory_{st.session_state['email']}.json"
+if "email" in st.session_state and st.session_state.get("logged_in"):
+    MEMORY_FILE = f"chat_memory_{st.session_state['email']}.json"
+    # Load or create chat memory file here
+    # ...
+else:
+    st.warning("Please login first to use the chatbot.")
+    st.stop()
+
 
 def save_memory():
     with open(MEMORY_FILE, "w", encoding="utf-8") as f:
