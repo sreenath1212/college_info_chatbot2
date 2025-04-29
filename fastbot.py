@@ -92,7 +92,7 @@ def process_row(row):
         if not field_value:
             continue
         field_value = field_value.strip()
-        if field_value.lower() in ['n', 'no', 'not available']:
+        if field_value.lower() in ['n', 'no', 'Nil']:
             continue
         if field_name != 'Institution_Name':
             clean_name = clean_field_name(field_name)
