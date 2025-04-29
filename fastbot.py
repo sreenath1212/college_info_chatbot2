@@ -62,8 +62,9 @@ OPENROUTER_API_KEYS = [
     st.secrets["OPENROUTER_API_KEY_1"],
     st.secrets["OPENROUTER_API_KEY_2"],
     st.secrets["OPENROUTER_API_KEY_3"],
+    st.secrets["OPENROUTER_API_KEY_4"],
 
-    
+
     # Add more keys as needed
 ]
 MODEL = 'google/gemini-2.0-flash-exp:free'
