@@ -27,14 +27,6 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
-# --- Title and Introduction ---
-
-st.title("🎓 College Info Assistant")
-st.markdown("""
-**An Intelligent Chatbot for College Search Powered by FAISS, Sentence Transformers, and OpenRouter LLMs**
-""")
-st.markdown("---")
-
 # --- Centered Title and Subtitle ---
 
 st.markdown("""
