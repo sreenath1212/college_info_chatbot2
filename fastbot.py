@@ -139,7 +139,6 @@ OPENROUTER_API_KEYS = [
     st.secrets["OPENROUTER_API_KEY_3"],
     st.secrets["OPENROUTER_API_KEY_4"],
 
-
     # Add more keys as needed
 ]
 MODEL = 'google/gemini-2.0-flash-exp:free'
@@ -283,63 +282,9 @@ def load_memory():
 generate_metadata_from_csv(CSV_FILE, TXT_FILE)
 
 model, texts, index = load_data_and_embeddings()
-TOP_K = len(texts)
+TOP_K = 5
 
 if "messages" not in st.session_state:
     st.session_state["messages"] = []
-    load_memory()
 
-if not st.session_state["messages"]:
-    welcome_message = "👋 Hello! How can I help you today? I can assist you with any college information you need."
-    st.session_state["messages"].append({"role": "assistant", "content": welcome_message})
-    save_memory()
-
-
-
-# Sidebar: Chat History
-with st.sidebar:
-    st.header("🕑 Chat History")
-    if st.session_state["messages"]:
-        for idx, msg in enumerate(st.session_state["messages"]):
-            st.markdown(f"**{msg['role'].capitalize()}**: {msg['content'][:30]}...")
-    else:
-        st.markdown("*No chats yet.*")
-
-    if st.button("🧹 Clear Chat"):
-        st.session_state["messages"] = []
-        save_memory()
-        st.rerun()
-
-    if st.button("📥 Download Chat"):
-        if st.session_state["messages"]:
-            chat_text = "\n\n".join([f"{m['role'].capitalize()}: {m['content']}" for m in st.session_state["messages"]])
-            st.download_button("Download as TXT", data=chat_text, file_name="chat_history.txt", mime="text/plain")
-
-# Display Messages
-for msg in st.session_state["messages"]:
-    with st.chat_message(msg["role"]):
-        st.markdown(f"<div class='chat-bubble'>{msg['content']}</div>", unsafe_allow_html=True)
-
-# User Input
-user_query = st.chat_input("Type your question here...")
-
-if user_query:
-    st.session_state["messages"].append({"role": "user", "content": user_query})
-
-    with st.chat_message("user"):
-        st.markdown(f"<div class='chat-bubble'>{user_query}</div>", unsafe_allow_html=True)
-
-    with st.spinner("Thinking..."):
-        context = retrieve_relevant_context(user_query, TOP_K)
-        raw_answer = ask_openrouter(context, user_query)
-
-    final_answer = ""
-    with st.chat_message("assistant"):
-        answer_placeholder = st.empty()
-        for i in range(len(raw_answer)):
-            final_answer = raw_answer[:i+1]
-            answer_placeholder.markdown(f"<div class='chat-bubble'>{final_answer}</div>", unsafe_allow_html=True)
-            time.sleep(0.01)
-
-    st.session_state["messages"].append({"role": "assistant", "content": raw_answer})
-    save_memory()
+load_memory()
