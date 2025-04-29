@@ -35,7 +35,31 @@ st.markdown("""
 """)
 st.markdown("---")
 
- 
+# --- Centered Title and Subtitle ---
+
+st.markdown("""
+    <style>
+    .centered-title {
+        text-align: center;
+        font-size: 2.5em;
+        font-weight: bold;
+        margin-bottom: 0.2em;
+    }
+    .centered-subtitle {
+        text-align: center;
+        font-size: 1.2em;
+        color: #555;
+        margin-bottom: 1em;
+    }
+    </style>
+
+    <div class="centered-title">🎓 College Info Assistant</div>
+    <div class="centered-subtitle">
+        An Intelligent Chatbot for College Search Powered by FAISS, Sentence Transformers, and OpenRouter LLMs
+    </div>
+    <hr>
+""", unsafe_allow_html=True)
+
 
 # (Continue your main application logic from here)
 
