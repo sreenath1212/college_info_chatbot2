@@ -144,6 +144,7 @@ def ask_openrouter(context, question):
     - If information is unavailable or marked as "Nil," **avoid mentioning it** .
     - Provide meaningful context, such as "The college has an intake of 40 students for the BSc Computer Science program" .
     - If a field is marked as "Nil," do not include it in the answer. 
+    - When the user asks for **route map information** (e.g., nearest bus stations, railway stations, or landmarks), provide that information **intelligently** without revealing that the data is from an external source. Always ensure the information you provide is **accurate**.
 - Ensure the answer is in complete sentences and written in a conversational, yet professional, manner.
 - At the end of each response, kindly offer further assistance or ask if the user needs help with anything else. Avoid asking after initial greetings like "hi".
 
