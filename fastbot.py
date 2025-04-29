@@ -134,7 +134,7 @@ def retrieve_relevant_context(query, top_k):
 
 def ask_openrouter(context, question):
     prompt = f"""You are a friendly and knowledgeable college assistant.
-Greet the user positively and help them by providing clear, helpful, and polite answers.
+Help user by providing clear, helpful, and polite answers.
 If the exact information is unavailable, respond politely without mentioning internal data or context.Also ask the user whether they need help in anything else.
 
     CONTEXT:
