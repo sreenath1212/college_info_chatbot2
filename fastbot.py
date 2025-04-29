@@ -142,6 +142,13 @@ def ask_openrouter(context, question):
     - **Separate** the information about schools and IHRD centers and provide **detailed and relevant** information about each.
     - Avoid unnecessary repetition or combining the details, but be comprehensive and informative.
     - If information is unavailable or marked as "Nil," **avoid mentioning it** .
+    -You must **expand abbreviations** commonly used in college names or groups. For example:
+        - IHRD → Institute of Human Resources Development
+        - CAS → College of Applied Science
+        - BSc → Bachelor of Science
+        - BCA → Bachelor of Computer Applications
+         - cs → Computer science
+       
     - Provide meaningful context, such as "The college has an intake of 40 students for the BSc Computer Science program" .
     - If a field is marked as "Nil," do not include it in the answer. 
     - When the user asks for **route map information** (e.g., nearest bus stations, railway stations, or landmarks), provide that information **intelligently** without revealing that the data is from an external source. Always ensure the information you provide is **accurate**.
