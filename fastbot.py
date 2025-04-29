@@ -27,6 +27,62 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
+USERS_FILE = "users.json"
+
+def hash_password(password):
+    return hashlib.sha256(password.encode()).hexdigest()
+
+def load_users():
+    if os.path.exists(USERS_FILE):
+        with open(USERS_FILE, "r") as f:
+            return json.load(f)["users"]
+    return []
+
+def save_user(email, password):
+    users = load_users()
+    users.append({"email": email, "password": hash_password(password)})
+    with open(USERS_FILE, "w") as f:
+        json.dump({"users": users}, f, indent=2)
+
+def authenticate_user(email, password):
+    users = load_users()
+    hashed = hash_password(password)
+    return any(user["email"] == email and user["password"] == hashed for user in users)
+
+def login_register_ui():
+    st.title("🔐 Login / Register")
+
+    if "authenticated" not in st.session_state:
+        st.session_state["authenticated"] = False
+
+    auth_mode = st.radio("Select mode:", ["Login", "Register"])
+
+    email = st.text_input("Email")
+    password = st.text_input("Password", type="password")
+
+    if auth_mode == "Login":
+        if st.button("Login"):
+            if authenticate_user(email, password):
+                st.session_state["authenticated"] = True
+                st.session_state["email"] = email
+                st.success("Login successful!")
+                st.experimental_rerun()
+            else:
+                st.error("Invalid email or password.")
+        st.stop()
+    else:
+        if st.button("Register"):
+            users = load_users()
+            if any(user["email"] == email for user in users):
+                st.warning("Email already registered.")
+            else:
+                save_user(email, password)
+                st.success("Registered successfully! You can now log in.")
+        st.stop()
+
+login_register_ui()
+
+
 # --- Centered Title and Subtitle ---
 
 st.markdown("""
@@ -140,7 +196,7 @@ If schools and IHRD centers are involved, mention them separately to the user.
 If exact information is unavailable, respond politely without mentioning internal data or context.
 Use external data only when the user specifically asks about a route map.
 Route map is an exception: you may freely provide any available information regarding it.
-At the end of each answer, ask the user whether they need help with anything else.
+At the end of the conversation not the first time messages like "hi", ask the user whether they need help with anything else.
 
     CONTEXT:
     {context}
@@ -185,7 +241,7 @@ At the end of each answer, ask the user whether they need help with anything els
             return f"❌ Error contacting OpenRouter: {e}"
 
 # --- Memory persistence ---
-MEMORY_FILE = "chat_memory.json"
+MEMORY_FILE = f"chat_memory_{st.session_state['email']}.json"
 
 def save_memory():
     with open(MEMORY_FILE, "w", encoding="utf-8") as f:
