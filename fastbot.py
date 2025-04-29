@@ -61,6 +61,8 @@ TXT_FILE = 'institution_descriptions.txt'
 OPENROUTER_API_KEYS = [
     st.secrets["OPENROUTER_API_KEY_1"],
     st.secrets["OPENROUTER_API_KEY_2"],
+    st.secrets["OPENROUTER_API_KEY_3"],
+
     
     # Add more keys as needed
 ]
