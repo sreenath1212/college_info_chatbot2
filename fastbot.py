@@ -142,7 +142,7 @@ def ask_openrouter(context, question):
     - **Separate** the information about schools and IHRD centers and provide **detailed and relevant** information about each.
     - Avoid unnecessary repetition or combining the details, but be comprehensive and informative.
     - If information is unavailable or marked as "Nil," **avoid mentioning it** .
-    - Provide meaningful context, such as "The college has an intake of 40 students for the BSc Computer Science program" for all details.
+    - Provide meaningful context, such as "The college has an intake of 40 students for the BSc Computer Science program" .
     - If a field is marked as "Nil," do not include it in the answer. 
 - Ensure the answer is in complete sentences and written in a conversational, yet professional, manner.
 - At the end of each response, kindly offer further assistance or ask if the user needs help with anything else. Avoid asking after initial greetings like "hi".
