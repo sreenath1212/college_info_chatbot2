@@ -32,7 +32,7 @@ st.markdown(
 # (Continue your main application logic from here)
 
 # --- Configuration ---
-CSV_FILE = 'cleaned_dataset.csv'
+CSV_FILE = 'standardized_finatdata.csv'
 TXT_FILE = 'institution_descriptions.txt'
 OPENROUTER_API_KEYS = [
     st.secrets["OPENROUTER_API_KEY_1"],
