@@ -10,6 +10,8 @@ import requests
 import os
 import time
 import json
+import hashlib
+
 
 # --- MUST BE FIRST: Streamlit page config ---
 st.set_page_config(
