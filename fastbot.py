@@ -12,7 +12,6 @@ import time
 import json
 import hashlib
 
-
 # --- MUST BE FIRST: Streamlit page config ---
 st.set_page_config(
     page_title="🎓 College Info Assistant",
@@ -101,9 +100,7 @@ def main():
     if st.session_state.get("logged_in"):
         st.write("🤖 You can now use the chatbot or other protected features.")
 
-
 # --- Centered Title and Subtitle ---
-
 st.markdown("""
     <style>
     .centered-title {
@@ -127,9 +124,6 @@ st.markdown("""
     <hr>
 """, unsafe_allow_html=True)
 
-
-# (Continue your main application logic from here)
-
 # --- Configuration ---
 CSV_FILE = 'standardized_finatdata.csv'
 TXT_FILE = 'institution_descriptions.txt'
@@ -147,7 +141,6 @@ if "api_key_index" not in st.session_state:
     st.session_state["api_key_index"] = 0
 
 # --- Utility Functions ---
-
 def clean_field_name(field_name):
     field_name = field_name.replace('_', ' ').replace('\n', ' ').strip().capitalize()
     field_name = re.sub(' +', ' ', field_name)
@@ -267,7 +260,6 @@ else:
     st.warning("Please login first to use the chatbot.")
     st.stop()
 
-
 def save_memory():
     with open(MEMORY_FILE, "w", encoding="utf-8") as f:
         json.dump(st.session_state["messages"], f)
@@ -278,7 +270,6 @@ def load_memory():
             st.session_state["messages"] = json.load(f)
 
 # --- MAIN LOGIC START ---
-
 generate_metadata_from_csv(CSV_FILE, TXT_FILE)
 
 model, texts, index = load_data_and_embeddings()
@@ -288,3 +279,7 @@ if "messages" not in st.session_state:
     st.session_state["messages"] = []
 
 load_memory()
+
+# Call the main function to run the app
+if __name__ == "__main__":
+    main()
