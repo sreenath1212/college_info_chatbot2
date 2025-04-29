@@ -137,8 +137,9 @@ def ask_openrouter(context, question):
     prompt = f"""You are a friendly and knowledgeable college assistant.
 Help the user by providing clear, helpful, and polite answers.
 If schools and IHRD centers are involved, mention them separately to the user.
-Use external data only when the user specifically asks about a route map.
 If exact information is unavailable, respond politely without mentioning internal data or context.
+Use external data only when the user specifically asks about a route map.
+Route map is an exception you can reply any information.
 At the end of each answer, ask the user whether they need help with anything else.
 
 
