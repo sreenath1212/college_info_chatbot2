@@ -10,7 +10,6 @@ import requests
 import os
 import time
 import json
-import hashlib
 
 # --- MUST BE FIRST: Streamlit page config ---
 st.set_page_config(
@@ -28,79 +27,8 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
-USER_FILE = "users.json"
-
-def load_users():
-    if not os.path.exists(USER_FILE):
-        with open(USER_FILE, "w") as f:
-            json.dump({"users": []}, f)
-    with open(USER_FILE, "r") as f:
-        return json.load(f)["users"]
-
-def save_user(email, password):
-    users = load_users()
-    users.append({"email": email, "password": hash_password(password)})
-    with open(USER_FILE, "w") as f:
-        json.dump({"users": users}, f)
-
-def hash_password(password):
-    return hashlib.sha256(password.encode()).hexdigest()
-
-def check_login(email, password):
-    users = load_users()
-    hashed = hash_password(password)
-    for user in users:
-        if user["email"] == email and user["password"] == hashed:
-            return True
-    return False
-
-# ---------------------- Login/Register UI ----------------------
-def login_register_ui():
-    st.title("🔐 Login / Register")
-
-    if "logged_in" not in st.session_state:
-        st.session_state.logged_in = False
-    if "email" not in st.session_state:
-        st.session_state.email = ""
-
-    if not st.session_state.logged_in:
-        choice = st.radio("Choose an option", ["Login", "Register"])
-
-        email = st.text_input("Email")
-        password = st.text_input("Password", type="password")
-
-        if choice == "Login":
-            if st.button("Login"):
-                if check_login(email, password):
-                    st.session_state.logged_in = True
-                    st.session_state.email = email
-                    st.success("Login successful!")
-                    st.experimental_rerun()
-                else:
-                    st.error("Invalid email or password.")
-        else:
-            if st.button("Register"):
-                users = load_users()
-                if any(u["email"] == email for u in users):
-                    st.error("Email already registered.")
-                else:
-                    save_user(email, password)
-                    st.success("Registered successfully. You can now login.")
-
-    else:
-        st.success(f"Welcome, {st.session_state.email}!")
-        if st.button("Logout"):
-            st.session_state.logged_in = False
-            st.session_state.email = ""
-            st.experimental_rerun()
-
-# ---------------------- App Entry ----------------------
-def main():
-    login_register_ui()
-    if st.session_state.get("logged_in"):
-        st.write("🤖 You can now use the chatbot or other protected features.")
-
 # --- Centered Title and Subtitle ---
+
 st.markdown("""
     <style>
     .centered-title {
@@ -124,6 +52,9 @@ st.markdown("""
     <hr>
 """, unsafe_allow_html=True)
 
+
+# (Continue your main application logic from here)
+
 # --- Configuration ---
 CSV_FILE = 'standardized_finatdata.csv'
 TXT_FILE = 'institution_descriptions.txt'
@@ -133,6 +64,7 @@ OPENROUTER_API_KEYS = [
     st.secrets["OPENROUTER_API_KEY_3"],
     st.secrets["OPENROUTER_API_KEY_4"],
 
+
     # Add more keys as needed
 ]
 MODEL = 'google/gemini-2.0-flash-exp:free'
@@ -141,6 +73,7 @@ if "api_key_index" not in st.session_state:
     st.session_state["api_key_index"] = 0
 
 # --- Utility Functions ---
+
 def clean_field_name(field_name):
     field_name = field_name.replace('_', ' ').replace('\n', ' ').strip().capitalize()
     field_name = re.sub(' +', ' ', field_name)
@@ -252,13 +185,7 @@ At the end of the conversation not the first time messages like "hi", ask the us
             return f"❌ Error contacting OpenRouter: {e}"
 
 # --- Memory persistence ---
-if "email" in st.session_state and st.session_state.get("logged_in"):
-    MEMORY_FILE = f"chat_memory_{st.session_state['email']}.json"
-    # Load or create chat memory file here
-    # ...
-else:
-    st.warning("Please login first to use the chatbot.")
-    st.stop()
+MEMORY_FILE = "chat_memory.json"
 
 def save_memory():
     with open(MEMORY_FILE, "w", encoding="utf-8") as f:
@@ -270,16 +197,67 @@ def load_memory():
             st.session_state["messages"] = json.load(f)
 
 # --- MAIN LOGIC START ---
+
 generate_metadata_from_csv(CSV_FILE, TXT_FILE)
 
 model, texts, index = load_data_and_embeddings()
-TOP_K = 5
+TOP_K = len(texts)
 
 if "messages" not in st.session_state:
     st.session_state["messages"] = []
+    load_memory()
 
-load_memory()
+if not st.session_state["messages"]:
+    welcome_message = "👋 Hello! How can I help you today? I can assist you with any college information you need."
+    st.session_state["messages"].append({"role": "assistant", "content": welcome_message})
+    save_memory()
 
-# Call the main function to run the app
-if __name__ == "__main__":
-    main()
+
+
+# Sidebar: Chat History
+with st.sidebar:
+    st.header("🕑 Chat History")
+    if st.session_state["messages"]:
+        for idx, msg in enumerate(st.session_state["messages"]):
+            st.markdown(f"**{msg['role'].capitalize()}**: {msg['content'][:30]}...")
+    else:
+        st.markdown("*No chats yet.*")
+
+    if st.button("🧹 Clear Chat"):
+        st.session_state["messages"] = []
+        save_memory()
+        st.rerun()
+
+    if st.button("📥 Download Chat"):
+        if st.session_state["messages"]:
+            chat_text = "\n\n".join([f"{m['role'].capitalize()}: {m['content']}" for m in st.session_state["messages"]])
+            st.download_button("Download as TXT", data=chat_text, file_name="chat_history.txt", mime="text/plain")
+
+# Display Messages
+for msg in st.session_state["messages"]:
+    with st.chat_message(msg["role"]):
+        st.markdown(f"<div class='chat-bubble'>{msg['content']}</div>", unsafe_allow_html=True)
+
+# User Input
+user_query = st.chat_input("Type your question here...")
+
+if user_query:
+    st.session_state["messages"].append({"role": "user", "content": user_query})
+
+    with st.chat_message("user"):
+        st.markdown(f"<div class='chat-bubble'>{user_query}</div>", unsafe_allow_html=True)
+
+    with st.spinner("Thinking..."):
+        context = retrieve_relevant_context(user_query, TOP_K)
+        raw_answer = ask_openrouter(context, user_query)
+
+    final_answer = ""
+    with st.chat_message("assistant"):
+        answer_placeholder = st.empty()
+        for i in range(len(raw_answer)):
+            final_answer = raw_answer[:i+1]
+            answer_placeholder.markdown(f"<div class='chat-bubble'>{final_answer}</div>", unsafe_allow_html=True)
+            time.sleep(0.01)
+
+    st.session_state["messages"].append({"role": "assistant", "content": raw_answer})
+    save_memory()
