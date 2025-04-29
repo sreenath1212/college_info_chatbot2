@@ -48,7 +48,7 @@ st.markdown("""
     <div class="centered-title">🎓 College Info Assistant</div>
     <div class="centered-subtitle">
         An Intelligent Chatbot for College Search Powered by FAISS, Sentence Transformers, and OpenRouter LLMs
-        \n ALL MESSEGES ARE CURRENTLY MONITORED BY ADMIN FOR IMPROVING CHATBOT PERFORMANCE
+        \n ALL MESSAGES ARE CURRENTLY MONITORED BY ADMIN FOR IMPROVING CHATBOT PERFORMANCE
     </div>
     <hr>
 """, unsafe_allow_html=True)
@@ -135,13 +135,13 @@ def retrieve_relevant_context(query, top_k):
     return context
 
 def ask_openrouter(context, question):
-    prompt = f"""You are a friendly and knowledgeable college assistant.
-Help the user by providing clear, helpful, and polite answers.
-If schools and IHRD centers are involved, mention them separately to the user.
-If exact information is unavailable, respond politely without mentioning internal data or context.
-Use external data only when the user specifically asks about a route map.
-Route map is an exception: you should provide nearest railway stations, bus stops, landmarks etc from external sources , Remember not to tell user about external sources reply normally like a human, Give correct informations only.
-At the end of the conversation not the first time messages like "hi", ask the user whether they need help with anything else.
+    prompt = f"""You are a friendly, professional, and knowledgeable college assistant. Your job is to help the user by providing **clear, accurate**, and polite answers.
+
+- If the user asks about schools or IHRD centers, mention them separately with the relevant information.
+- If exact details are unavailable, respond politely without mentioning internal data or speculative context.
+- Only refer to external data when the user specifically asks about a route map (e.g., nearest railway stations, bus stops, landmarks). When doing so, provide the information in a natural way without revealing that it's external data. **Ensure all information is accurate and reliable**.
+
+At the end of each response, politely ask if the user needs further assistance, but do not ask after the first user message like "hi" or greetings.
 
     CONTEXT:
     {context}
