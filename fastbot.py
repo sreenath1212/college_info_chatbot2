@@ -48,7 +48,7 @@ st.markdown("""
     <div class="centered-title">🎓 College Info Assistant</div>
     <div class="centered-subtitle">
         An Intelligent Chatbot for College Search Powered by FAISS, Sentence Transformers, and OpenRouter LLMs
-        /n ALL MESSEGES ARE CURRENTLY MONITORED BY ADMIN FOR IMPROVING CHATBOT RESPONSE
+        \n ALL MESSEGES ARE CURRENTLY MONITORED BY ADMIN FOR IMPROVING CHATBOT RESPONSE
     </div>
     <hr>
 """, unsafe_allow_html=True)
