@@ -29,60 +29,77 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
-USERS_FILE = "users.json"
-
-def hash_password(password):
-    return hashlib.sha256(password.encode()).hexdigest()
+USER_FILE = "users.json"
 
 def load_users():
-    if os.path.exists(USERS_FILE):
-        with open(USERS_FILE, "r") as f:
-            return json.load(f)["users"]
-    return []
+    if not os.path.exists(USER_FILE):
+        with open(USER_FILE, "w") as f:
+            json.dump({"users": []}, f)
+    with open(USER_FILE, "r") as f:
+        return json.load(f)["users"]
 
 def save_user(email, password):
     users = load_users()
     users.append({"email": email, "password": hash_password(password)})
-    with open(USERS_FILE, "w") as f:
-        json.dump({"users": users}, f, indent=2)
+    with open(USER_FILE, "w") as f:
+        json.dump({"users": users}, f)
 
-def authenticate_user(email, password):
+def hash_password(password):
+    return hashlib.sha256(password.encode()).hexdigest()
+
+def check_login(email, password):
     users = load_users()
     hashed = hash_password(password)
-    return any(user["email"] == email and user["password"] == hashed for user in users)
+    for user in users:
+        if user["email"] == email and user["password"] == hashed:
+            return True
+    return False
 
+# ---------------------- Login/Register UI ----------------------
 def login_register_ui():
     st.title("🔐 Login / Register")
 
-    if "authenticated" not in st.session_state:
-        st.session_state["authenticated"] = False
+    if "logged_in" not in st.session_state:
+        st.session_state.logged_in = False
+    if "email" not in st.session_state:
+        st.session_state.email = ""
 
-    auth_mode = st.radio("Select mode:", ["Login", "Register"])
+    if not st.session_state.logged_in:
+        choice = st.radio("Choose an option", ["Login", "Register"])
 
-    email = st.text_input("Email")
-    password = st.text_input("Password", type="password")
+        email = st.text_input("Email")
+        password = st.text_input("Password", type="password")
 
-    if auth_mode == "Login":
-        if st.button("Login"):
-            if authenticate_user(email, password):
-                st.session_state["authenticated"] = True
-                st.session_state["email"] = email
-                st.success("Login successful!")
-                st.experimental_rerun()
-            else:
-                st.error("Invalid email or password.")
-        st.stop()
+        if choice == "Login":
+            if st.button("Login"):
+                if check_login(email, password):
+                    st.session_state.logged_in = True
+                    st.session_state.email = email
+                    st.success("Login successful!")
+                    st.experimental_rerun()
+                else:
+                    st.error("Invalid email or password.")
+        else:
+            if st.button("Register"):
+                users = load_users()
+                if any(u["email"] == email for u in users):
+                    st.error("Email already registered.")
+                else:
+                    save_user(email, password)
+                    st.success("Registered successfully. You can now login.")
+
     else:
-        if st.button("Register"):
-            users = load_users()
-            if any(user["email"] == email for user in users):
-                st.warning("Email already registered.")
-            else:
-                save_user(email, password)
-                st.success("Registered successfully! You can now log in.")
-        st.stop()
+        st.success(f"Welcome, {st.session_state.email}!")
+        if st.button("Logout"):
+            st.session_state.logged_in = False
+            st.session_state.email = ""
+            st.experimental_rerun()
 
-login_register_ui()
+# ---------------------- App Entry ----------------------
+def main():
+    login_register_ui()
+    if st.session_state.get("logged_in"):
+        st.write("🤖 You can now use the chatbot or other protected features.")
 
 
 # --- Centered Title and Subtitle ---
