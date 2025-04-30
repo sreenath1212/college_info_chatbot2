@@ -140,7 +140,7 @@ def ask_openrouter(context, question):
                 Do not mention or refer to the context source, internal processes, or how you obtained the information.
                 User may use abbrevations like mvk for mavelikkara, cs for computer science etc.
                 Keep your answers concise, accurate, informative, and student-friendly.
-                When answering institution details try to answer in meaningful sentences instead of simply displaying it.
+                When answering institution details answer in meaningful sentences using proper headings and subheadings in a neat way.
                 If the user asks about location or route maps, provide how to travel and direction from well-known nearby bus stops or railway stations to institution using your external knowledge.
 
     CONTEXT:
