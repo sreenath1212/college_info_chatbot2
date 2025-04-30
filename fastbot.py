@@ -68,10 +68,11 @@ OPENROUTER_API_KEYS = [
 
     # Add more keys as needed
 ]
-MODEL ='mistralai/mistral-small-3.1-24b-instruct:free'
+MODEL ='google/gemini-2.0-flash-exp:free'
+#'mistralai/mistral-small-3.1-24b-instruct:free'
 #'deepseek/deepseek-v3-base:free'
 #'meta-llama/llama-4-scout:free'
-#'google/gemini-2.0-flash-exp:free'
+
 
 if "api_key_index" not in st.session_state:
     st.session_state["api_key_index"] = 0
