@@ -140,6 +140,7 @@ def ask_openrouter(context, question):
                 Do not mention or refer to the context source, internal processes, or how you obtained the information.
                 If the user asks about location or route maps, provide clear and precise directions using well-known nearby bus stops or railway stations if available using your external knowledge.
                 Keep your answers concise, informative, and student-friendly.
+                Answer to the question only.
     CONTEXT:
     {context}
 
