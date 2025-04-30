@@ -139,9 +139,8 @@ def ask_openrouter(context, question):
                 Use only the provided context to answer the user's question accurately and helpfully.
                 Do not mention or refer to the context source, internal processes, or how you obtained the information.
                 User may use abbrevations like mvk for mavelikkara, cs for computer science etc.
-                Keep your answers concise, accurate, informative, and student-friendly.
-                Do not provide anything with nil value until user asks about it.
-                When answering institution details answer in meaningful sentences using headings ,subheadings and meaningful sentences instead of raw input.
+                Keep your answers accurate, informative, and student-friendly.
+                When answering institution details answer in meaningful sentences in a format in order main heading followed by sub heading followed by meaningful sentences made using the data.
                 If the user asks about location or route maps, provide how to travel and direction from well-known nearby bus stops or railway stations to institution using your external knowledge.
 
     CONTEXT:
