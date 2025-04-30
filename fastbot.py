@@ -68,7 +68,8 @@ OPENROUTER_API_KEYS = [
 
     # Add more keys as needed
 ]
-MODEL = 'deepseek/deepseek-v3-base:free'
+MODEL ='mistralai/mistral-small-3.1-24b-instruct:free'
+#'deepseek/deepseek-v3-base:free'
 #'meta-llama/llama-4-scout:free'
 #'google/gemini-2.0-flash-exp:free'
 
