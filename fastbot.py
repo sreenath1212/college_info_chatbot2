@@ -146,7 +146,7 @@ Instructions:
 - Use ONLY the context provided below to answer the user's question.
 - Filter the data intelligently:
     • If a college does not offer the course or program mentioned, dont mention it in output.  
-    • The data you have may not be correct cross varify with users question before sending it.
+    • Answer to the question only.
     • Show intake capacity if it is specified.
 - Do not mention anything about “context”, “documents”, or how you found the data.
 - If the required info is not in the context, say: “Sorry, I couldn't find that information.”
