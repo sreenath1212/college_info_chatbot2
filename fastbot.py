@@ -68,7 +68,8 @@ OPENROUTER_API_KEYS = [
 
     # Add more keys as needed
 ]
-MODEL = 'meta-llama/llama-4-scout:free'
+MODEL = 'deepseek/deepseek-v3-base:free'
+#'meta-llama/llama-4-scout:free'
 #'google/gemini-2.0-flash-exp:free'
 
 if "api_key_index" not in st.session_state:
