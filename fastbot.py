@@ -142,7 +142,7 @@ Instructions:
 - Use ONLY the context provided below to answer the user's question.
 - Filter the data intelligently: 
     • If a college does NOT offer the course or program mentioned, ignore it.  
-    • Ignore colleges offering other or unrelated courses eg:msc electronics should be ignored when asking about about msc computer science............... etc.
+    • Ignore colleges offering other or unrelated courses or unavailable information.
     • Do not give colleges if the course is not offered .
     • Show intake capacity if it is specified.
 - Do not mention anything about “context”, “documents”, or how you found the data.
