@@ -135,13 +135,12 @@ def retrieve_relevant_context(query, top_k):
     return context
 
 def ask_openrouter(context, question):
-    prompt = f"""You are a friendly, knowledgeable, and professional assistant for college-related queries.
+    prompt = f"""
+                You are a friendly, knowledgeable, and professional assistant for college-related queries.
                 Use only the provided context to answer the user's question accurately and helpfully.
                 Do not mention or refer to the context source, internal processes, or how you obtained the information.
-                User may use abbrevations like mvk for mavelikkara, cs for computer science etc.
-                Keep your answers accurate, informative, and student-friendly.
-                Do not provide the "nil" value data to user.
-                If the user asks about location or route maps, provide how to travel and direction from well-known nearby bus stops or railway stations to institution using your external knowledge.
+                If the user asks about location or route maps, provide clear and precise directions using well-known nearby bus stops or railway stations if available using your external knowledge.
+                Keep your answers concise, informative, and student-friendly.
 
     CONTEXT:
     {context}
