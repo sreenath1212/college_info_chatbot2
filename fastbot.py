@@ -138,8 +138,9 @@ def ask_openrouter(context, question):
     prompt = f"""You are a friendly, knowledgeable, and professional assistant for college-related queries.
                 Use only the provided context to answer the user's question accurately and helpfully.
                 Do not mention or refer to the context source, internal processes, or how you obtained the information.
-                If the user asks about location or route maps, provide correct well-known nearby bus stops or railway stations using your external knowledge.
                 Keep your answers concise, accurate, informative, and student-friendly.
+                If the user asks about location or route maps, provide how to travel from well-known nearby bus stops or railway stations to institution using your external knowledge.
+
     CONTEXT:
     {context}
 
