@@ -109,7 +109,7 @@ Instructions:
 - **Intelligent Filtering:** Analyze the CONTEXT to identify and present only the information relevant to the QUESTION. If the QUESTION is a specific college name or a district, provide ALL available information about institutions within that name or district.
 - **Comprehensive Information Retrieval:** Only if the user asks for a college name without a specific details or question, extract and present all details available for that college from the CONTEXT.
 - **DO NOT PROVIDE UNAVAILABLE INFORMATION OR MENTION ABOUT THAT TO THE USER. 
-- **INCUBATION CENTER AND INDUSTRY IN CAMPUS AND STARTUP INITIATIVES ARE ENTIRELY DIFFERENT PROGRAMS.
+- **INCUBATION CENTER AND INDUSTRY IN CAMPUS AND STARTUP INITIATIVES ARE ENTIRELY DIFFERENT PROGRAMS.MSC, BSC ARE DIFFERENT
 - **Clear and Natural Sentences:** Present the information in well-formed, easy-to-understand sentences. Avoid just listing field names and values. For example, instead of "Course: B.Sc. CS, Intake: 60", say "The college offers a B.Sc. in Computer Science with an intake capacity of 60 students."
 - **Course/Program Specificity:** When listing courses, ensure they are explicitly stated in the CONTEXT for a given college.
 - **Intake Capacity:** Include intake capacity figures in a sentence if and only if they are explicitly provided in the CONTEXT for the relevant course/program.
