@@ -112,6 +112,9 @@ Include all such colleges, regardless of any sub-headings or separate sections i
 
 If the context does not contain any information about the specific type of college or the specified location, state that clearly and concisely.
 
+Present the main answer clearly and concisely, followed by the connected details in a natural and organized manner. Use the provided context as your sole source of information for both the main answer and the connected details.
+
+
     CONTEXT:
     {context}
 
