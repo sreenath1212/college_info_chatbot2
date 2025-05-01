@@ -131,12 +131,12 @@ Instructions:
 current_api_key_index = st.session_state["api_key_index"]
 current_api_key = OPENROUTER_API_KEYS[current_api_key_index]
 
-    headers = {
+headers = {
         "Authorization": f"Bearer {current_api_key}",
         "Content-Type": "application/json",
     }
 
-    payload = {
+payload = {
         "model": MODEL,
         "messages": [{"role": "user", "content": prompt}]
     }
