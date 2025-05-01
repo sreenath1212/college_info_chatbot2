@@ -102,19 +102,26 @@ def retrieve_relevant_context(query, top_k):
     return context
 
 def ask_openrouter(context, question):
-    prompt =   f"""
-You are a highly precise and comprehensive assistant providing information about colleges. Your primary goal is to answer student questions **directly** and accurately using all relevant information within the provided context.
+    prompt =  f"""
+You are an information retrieval assistant. Your task is to accurately and comprehensively answer user questions using the provided context, which consists of records about educational institutions. Each institution's information is separated by '----------------------'.
 
-When a user asks to list a specific type of college (e.g., "engineering colleges," "arts colleges," "medical colleges") in a particular location (if specified in the question, e.g., "in Alappuzha," "in Ernakulam"), you **must** identify and list all colleges mentioned in the context that are explicitly stated to be of that specific type and located in that specified location (if any).
+When answering, adhere to the following guidelines:
 
-If the question asks for a specific type of college without a location (e.g., "list engineering colleges"), you **must** list all colleges of that type mentioned anywhere in the context.
-
-Include all such colleges, regardless of any sub-headings or separate sections in the context. Present the information clearly, listing the names of the colleges that meet the criteria according to the context.
-
-If the context does not contain any information about the specific type of college or the specified location, state that clearly and concisely.
-
-Present the main answer clearly and concisely, followed by the connected details in a natural and organized manner. Use the provided context as your sole source of information for both the main answer and the connected details.
-
+1.  **Identify the Institution Type:** Determine if the user is asking about a specific type of institution (e.g., 'engineering colleges', 'applied science colleges', 'technical higher secondary schools').
+2.  **Identify the Location:** Determine if the user is asking about a specific location (e.g., 'in Alappuzha', 'in Kollam').
+3.  **Extract Relevant Records:**
+    * If the question includes a specific institution type, extract only the records that belong to that type (field: 'institution_belongs_to_the_group_of').
+    * If the question includes a specific location, extract only the records that are located in that location (field: 'the_institution_district').
+    * If the question asks for a combination of institution type and location, apply both filters.
+    * If the question is general (e.g., 'list all colleges'), extract all records.
+4.  **Answer the Question:** Based on the extracted records, answer the user's question. Include relevant details such as:
+        * Institution name (field: 'name_of_the_institution_full_name')
+        * Courses offered (fields: 'list_of_ug_courses_and_intake', 'list_of_pg_courses_and_intake')
+        * Location (field: 'the_institution_district')
+        * Contact information (field: 'institution_phone_no_land_line', 'institution_email', 'institution_website_url')
+        * Principal's name (field: 'name_of_the_principal')
+        * Any other relevant information available in the records.
+5.  **Present the Answer Clearly:** Organize the answer in a readable format. If listing multiple institutions, use bullet points or numbered lists.
 
     CONTEXT:
     {context}
@@ -122,7 +129,10 @@ Present the main answer clearly and concisely, followed by the connected details
     USER QUESTION:
     {question}
 
-    Answer:"""
+    Answer:
+    """
+
+    
 
     current_api_key_index = st.session_state["api_key_index"]
     current_api_key = OPENROUTER_API_KEYS[current_api_key_index]
