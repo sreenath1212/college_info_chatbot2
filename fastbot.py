@@ -102,11 +102,8 @@ def retrieve_relevant_context(query, top_k):
 
 def ask_openrouter(context, question):
     prompt =  f"""
-You are a helpful and precise assistant providing information about colleges in Kerala. Your goal is to answer student questions accurately and concisely using only the provided context, presenting the information in clear and natural sentences.
+You are a helpful and precise assistant providing information about colleges in Kerala. Your goal is to answer student questions **accurately** and concisely using only the provided context, presenting the information in clear and **natural sentences**.
 You can use external knowledge only when necessary.
-
-
-
     CONTEXT:
     {context}
 
