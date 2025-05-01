@@ -64,7 +64,7 @@ OPENROUTER_API_KEYS = [
     st.secrets["OPENROUTER_API_KEY_4"],
     # Add more keys as needed
 ]
-MODEL ='google/gemini-2.0-flash-exp:free'
+MODEL ='meta-llama/llama-4-maverick:free'
 #'mistralai/mistral-small-3.1-24b-instruct:free'
 #'deepseek/deepseek-v3-base:free'
 #'meta-llama/llama-4-scout:free'
