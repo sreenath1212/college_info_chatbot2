@@ -101,7 +101,7 @@ def retrieve_relevant_context(query, top_k):
     return context
 
 def ask_openrouter(context, question):
-   prompt =  f"""
+    prompt =  f"""
 You are a helpful and precise assistant providing information about colleges in Kerala. Your goal is to answer student questions accurately and concisely using only the provided context, presenting the information in clear and natural sentences.
 
 Instructions:
@@ -128,8 +128,8 @@ Instructions:
 
     Answer:"""
 
-    current_api_key_index = st.session_state["api_key_index"]
-    current_api_key = OPENROUTER_API_KEYS[current_api_key_index]
+current_api_key_index = st.session_state["api_key_index"]
+current_api_key = OPENROUTER_API_KEYS[current_api_key_index]
 
     headers = {
         "Authorization": f"Bearer {current_api_key}",
