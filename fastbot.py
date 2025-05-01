@@ -56,7 +56,7 @@ st.markdown("""
 # (Continue your main application logic from here)
 
 # --- Configuration ---
-TXT_FILE = '123.txt'
+TXT_FILE = 'cleaned_output.txt'
 OPENROUTER_API_KEYS = [
     st.secrets["OPENROUTER_API_KEY_1"],
     st.secrets["OPENROUTER_API_KEY_2"],
