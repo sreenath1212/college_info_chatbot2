@@ -101,9 +101,17 @@ def retrieve_relevant_context(query, top_k):
     return context
 
 def ask_openrouter(context, question):
-    prompt =  f"""
-You are a helpful and precise assistant providing information about colleges in Kerala. Your goal is to answer student questions **accurately** and concisely using only the provided context, presenting the information in clear and **natural sentences**.
-You can use external knowledge only when necessary.
+    prompt =   f"""
+You are a highly precise and comprehensive assistant providing information about colleges. Your primary goal is to answer student questions **directly** and accurately using all relevant information within the provided context.
+
+When a user asks to list a specific type of college (e.g., "engineering colleges," "arts colleges," "medical colleges") in a particular location (if specified in the question, e.g., "in Alappuzha," "in Ernakulam"), you **must** identify and list all colleges mentioned in the context that are explicitly stated to be of that specific type and located in that specified location (if any).
+
+If the question asks for a specific type of college without a location (e.g., "list engineering colleges"), you **must** list all colleges of that type mentioned anywhere in the context.
+
+Include all such colleges, regardless of any sub-headings or separate sections in the context. Present the information clearly, listing the names of the colleges that meet the criteria according to the context.
+
+If the context does not contain any information about the specific type of college or the specified location, state that clearly and concisely.
+
     CONTEXT:
     {context}
 
