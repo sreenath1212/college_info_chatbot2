@@ -1,4 +1,3 @@
-import csv
 import re
 import multiprocessing
 from multiprocessing import Pool
@@ -57,15 +56,12 @@ st.markdown("""
 # (Continue your main application logic from here)
 
 # --- Configuration ---
-CSV_FILE = 'standardized_finatdata.csv'
-TXT_FILE = 'institution_descriptions.txt'
+TXT_FILE = 'cleaned_institution_descriptions.txt'
 OPENROUTER_API_KEYS = [
     st.secrets["OPENROUTER_API_KEY_1"],
     st.secrets["OPENROUTER_API_KEY_2"],
     st.secrets["OPENROUTER_API_KEY_3"],
     st.secrets["OPENROUTER_API_KEY_4"],
-
-
     # Add more keys as needed
 ]
 MODEL ='google/gemini-2.0-flash-exp:free'
@@ -83,40 +79,6 @@ def clean_field_name(field_name):
     field_name = field_name.replace('_', ' ').replace('\n', ' ').strip().capitalize()
     field_name = re.sub(' +', ' ', field_name)
     return field_name
-
-def process_row(row):
-    description = ""
-    institution_name = row.get('Institution_Name', '').strip()
-    if institution_name:
-        description += f"{institution_name}."
-    else:
-        description += "Institution Name: Not Available."
-
-    for field_name, field_value in row.items():
-        if not field_value:
-            continue
-        field_value = field_value.strip()
-        if field_value.lower() in ['n', 'no', 'Nil']:
-            continue
-        if field_name != 'Institution_Name':
-            clean_name = clean_field_name(field_name)
-            description += f" {clean_name}: {field_value}."
-
-    return description.strip()
-
-def generate_metadata_from_csv(csv_filepath, output_txt_path, num_workers=None):
-    if os.path.exists(output_txt_path):
-        return
-
-    with open(csv_filepath, 'r', encoding='utf-8') as csvfile:
-        reader = list(csv.DictReader(csvfile))
-
-    with Pool(processes=num_workers or multiprocessing.cpu_count()) as pool:
-        paragraphs = pool.map(process_row, reader)
-
-    with open(output_txt_path, 'w', encoding='utf-8') as outfile:
-        for paragraph in paragraphs:
-            outfile.write(paragraph + '\n' + '-' * 40 + '\n')
 
 @st.cache_resource
 def load_data_and_embeddings():
@@ -140,21 +102,22 @@ def retrieve_relevant_context(query, top_k):
 
 def ask_openrouter(context, question):
     prompt =  f"""
-You are a professional assistant helping students find accurate information about colleges in Kerala.
+You are a helpful and precise assistant providing information about colleges in Kerala. Your goal is to answer student questions accurately and concisely using only the provided context, presenting the information in clear and natural sentences.
 
 Instructions:
-- Use ONLY the context provided below to answer the user's question.
-- The provided context includes all related things. So when responding filter out what is needed only , for eg: dont provide mcom if asks for msc cs.
-- Filter the data intelligently:
-    • If a college does not offer the course or program mentioned, dont mention it in output.  
-    • Answer to the question only.
-    • Show intake capacity if it is specified.
-- Do not mention anything about “context”, “documents”, or how you found the data.
-- If the required info is not in the context, say: “Sorry, I couldn't find that information.”
-- If the question is about location or travel directions, provide helpful answers using nearby towns, railway stations, or bus stops (using your general knowledge).
-- Interpret abbreviations: cs → Computer Science, msc → Master of Science, mvk → Mavelikkara, etc.
-- Keep your response student-friendly, clear, and concise.
-DO NOT HALUCINATE!!!
+- **Strictly use the information within the CONTEXT below to answer the QUESTION.** Do not use any external knowledge.
+- **Intelligent Filtering:** Analyze the CONTEXT to identify and present only the information relevant to the QUESTION. If the QUESTION is a specific college name or a district, provide ALL available information about institutions within that name or district.
+- **Comprehensive Information Retrieval:** Only if the user asks for a college name without a specific details or question, extract and present all details available for that college from the CONTEXT.
+- **Clear and Natural Sentences:** Present the information in well-formed, easy-to-understand sentences. Avoid just listing field names and values. For example, instead of "Course: B.Sc. CS, Intake: 60", say "The college offers a B.Sc. in Computer Science with an intake capacity of 60 students."
+- **Course/Program Specificity:** When listing courses, ensure they are explicitly stated in the CONTEXT for a given college.
+- **Intake Capacity:** Include intake capacity figures in a sentence if and only if they are explicitly provided in the CONTEXT for the relevant course/program.
+- **No Contextual References:** Do not refer to the "context", "documents", or how you accessed the information.
+- **Information Absence Handling:** If the requested information is not found within the CONTEXT, respond with: "Sorry, I couldn't find that information."
+- **Location and Directions:**This is an exception you should respond outside the context- For specific college names, If the question is about location or travel directions or routmaps,you should strictly provide detailed helpful answers using nearby towns, railway stations, or bus stops (using your general knowledge).
+- **Abbreviation Interpretation:** Understand and interpret common abbreviations like "cs", "msc", "mvk", etc.
+- **Student-Friendly Tone:** Maintain a clear, concise, and helpful tone suitable for students.
+- **DO NOT HALLUCINATE.**
+
     CONTEXT:
     {context}
 
@@ -186,14 +149,14 @@ DO NOT HALUCINATE!!!
         else:
             if "rate limit" in str(data).lower() or "quota" in str(data).lower():
                 st.session_state["api_key_index"] = (current_api_key_index + 1) % len(OPENROUTER_API_KEYS)
-                return ask_openrouter(context, question)  
+                return ask_openrouter(context, question)
             else:
                 return f"❌ OpenRouter error: {data}"
 
     except Exception as e:
         if "rate limit" in str(e).lower() or "quota" in str(e).lower():
             st.session_state["api_key_index"] = (current_api_key_index + 1) % len(OPENROUTER_API_KEYS)
-            return ask_openrouter(context, question)  
+            return ask_openrouter(context, question)
         else:
             return f"❌ Error contacting OpenRouter: {e}"
 
@@ -210,8 +173,6 @@ def load_memory():
             st.session_state["messages"] = json.load(f)
 
 # --- MAIN LOGIC START ---
-
-generate_metadata_from_csv(CSV_FILE, TXT_FILE)
 
 model, texts, index = load_data_and_embeddings()
 TOP_K = len(texts)
