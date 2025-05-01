@@ -94,7 +94,7 @@ def load_data_and_embeddings():
 
     return model, texts, index
 
-def retrieve_relevant_context(query, top_k=100000000000000000): # Changed TOP_K to a default of 5
+def retrieve_relevant_context(query, top_k):
     query_emb = model.encode([query])
     distances, indices = index.search(np.array(query_emb), top_k)
     context = "\n\n".join([texts[i] for i in indices[0]])
@@ -106,18 +106,16 @@ You are a helpful and precise assistant providing information about colleges in 
 
 Instructions:
 - **Strictly use the information within the CONTEXT below to answer the QUESTION.** Do not use any external knowledge.
-- **Cross verify field names with users question and filter it before sending.**
-- **Intelligent Filtering:** Analyze the CONTEXT to identify and present only the information **directly related to the specific terms** in the QUESTION. For example, if the question is about "incubation center," only provide details explicitly mentioning "incubation center." Similarly, for "MSc," focus on "MSc" programs and not "MCom" unless both are explicitly mentioned together in the context for a specific college.
+- **Intelligent Filtering:** Analyze the CONTEXT to identify and present only the information relevant to the QUESTION. If the QUESTION is a specific college name or a district, provide ALL available information about institutions within that name or district.
 - **Comprehensive Information Retrieval:** Only if the user asks for a college name without a specific details or question, extract and present all details available for that college from the CONTEXT.
 - **Clear and Natural Sentences:** Present the information in well-formed, easy-to-understand sentences. Avoid just listing field names and values. For example, instead of "Course: B.Sc. CS, Intake: 60", say "The college offers a B.Sc. in Computer Science with an intake capacity of 60 students."
 - **Course/Program Specificity:** When listing courses, ensure they are explicitly stated in the CONTEXT for a given college.
+- **Intake Capacity:** Include intake capacity figures in a sentence if and only if they are explicitly provided in the CONTEXT for the relevant course/program.
 - **No Contextual References:** Do not refer to the "context", "documents", or how you accessed the information.
 - **Information Absence Handling:** If the requested information is not found within the CONTEXT, respond with: "Sorry, I couldn't find that information."
 - **Location and Directions:**This is an exception you should respond outside the context- For specific college names, If the question is about location or travel directions or routmaps,you should strictly provide detailed helpful answers using nearby towns, railway stations, or bus stops (using your general knowledge).
 - **Abbreviation Interpretation:** Understand and interpret common abbreviations like "cs", "msc", "mvk", etc.
 - **Student-Friendly Tone:** Maintain a clear, concise, and helpful tone suitable for students.
-- **Do not send field names having nil value or unavailable information to the user.**
-- **User may use incomplete sentences or mispelleded words interpret it using your knowledge to provide correct answer.**
 - **DO NOT HALLUCINATE.**
 
     CONTEXT:
@@ -177,7 +175,7 @@ def load_memory():
 # --- MAIN LOGIC START ---
 
 model, texts, index = load_data_and_embeddings()
-# TOP_K = len(texts) # No longer needed as top_k is in the function call
+TOP_K = len(texts)
 
 if "messages" not in st.session_state:
     st.session_state["messages"] = []
@@ -224,7 +222,7 @@ if user_query:
         st.markdown(f"<div class='chat-bubble'>{user_query}</div>", unsafe_allow_html=True)
 
     with st.spinner("Thinking..."):
-        context = retrieve_relevant_context(user_query) # Using the default top_k=5
+        context = retrieve_relevant_context(user_query, TOP_K)
         raw_answer = ask_openrouter(context, user_query)
 
     final_answer = ""
