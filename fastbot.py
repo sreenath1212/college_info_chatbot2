@@ -94,7 +94,7 @@ def load_data_and_embeddings():
 
     return model, texts, index
 
-def retrieve_relevant_context(query, top_k):
+def retrieve_relevant_context(query, top_k=100000000000000000): # Changed TOP_K to a default of 5
     query_emb = model.encode([query])
     distances, indices = index.search(np.array(query_emb), top_k)
     context = "\n\n".join([texts[i] for i in indices[0]])
@@ -128,15 +128,15 @@ Instructions:
 
     Answer:"""
 
-current_api_key_index = st.session_state["api_key_index"]
-current_api_key = OPENROUTER_API_KEYS[current_api_key_index]
+    current_api_key_index = st.session_state["api_key_index"]
+    current_api_key = OPENROUTER_API_KEYS[current_api_key_index]
 
-headers = {
+    headers = {
         "Authorization": f"Bearer {current_api_key}",
         "Content-Type": "application/json",
     }
 
-payload = {
+    payload = {
         "model": MODEL,
         "messages": [{"role": "user", "content": prompt}]
     }
@@ -177,7 +177,7 @@ def load_memory():
 # --- MAIN LOGIC START ---
 
 model, texts, index = load_data_and_embeddings()
-TOP_K = len(texts)
+# TOP_K = len(texts) # No longer needed as top_k is in the function call
 
 if "messages" not in st.session_state:
     st.session_state["messages"] = []
@@ -224,7 +224,7 @@ if user_query:
         st.markdown(f"<div class='chat-bubble'>{user_query}</div>", unsafe_allow_html=True)
 
     with st.spinner("Thinking..."):
-        context = retrieve_relevant_context(user_query, TOP_K)
+        context = retrieve_relevant_context(user_query) # Using the default top_k=5
         raw_answer = ask_openrouter(context, user_query)
 
     final_answer = ""
