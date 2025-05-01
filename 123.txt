@@ -12,10 +12,10 @@ cug_number_of_the_principal: 8547005018
 mail_id_of_the_principal: caskarthikapally@gmail.com
 mobile_number_of_the_principal_whatsapp_number: 9447594171
 ug_courses_and_intake : 
-1.  B.Sc. Computer Science (Honors/ Research)- 50
-2. BCA (Honors/ Research)- 50 
-3. BCom Co-operation (Honors/ Research)- 50 
-4. BCom Logistics & Supply Chain  (Honors/ Research)- 50
+1.  B.Sc. Computer Science (Honors/ Research)- 50,
+2. BCA (Honors/ Research)- 50 ,
+3. BCom Co-operation (Honors/ Research)- 50 ,
+4. BCom Logistics & Supply Chain  (Honors/ Research)- 50,
 5. BBA Logistics  (Honors/ Research)- 50
 pg_courses_and_intake :
 1. M.Com Finance and Accounting- 20
@@ -30,11 +30,11 @@ percentage_of_placement_in_previous_academic_year: 10
 percentage_of_students_who_opted_for_higher_studies_in_the_previous_academic_year: 15
 using_plan_fund_details: 2020-2021, Administrative block, first floor, 130 Lakhs
 details_of_skill_centre_implemented_for_fyugp_students : 
-1. TKMM College Nangiarkulangara
-2. St. Joseph College alappuzha
-3. MSM College Kayamkulam
+1. TKMM College Nangiarkulangara,
+2. St. Joseph College alappuzha,
+3. MSM College Kayamkulam,
 details_of_mou_signed_with_industry_institution :
-1. KMML, Chavara, Kollam 
+1. KMML, Chavara, Kollam ,
 2. St.Joseph College Alappuzha
 ----------------------------------------
 the_institution_district: Kollam
@@ -50,9 +50,9 @@ cug_number_of_the_principal: 8547005039
 mail_id_of_the_principal: cekottarakara.ihrd@gmail.com
 mobile_number_of_the_principal_whatsapp_number: 9446341891
 ug_courses_and_intake : 
-1. BTech Computer Science and Engineering -120
-2. BTech Computer Science AI and ML - 60
-3. BCA -60
+1. BTech Computer Science and Engineering -120,
+2. BTech Computer Science AI and ML - 60,
+3. BCA -60,
 4. BBA -60
 university_board_of_affiliation: KTU
 name_of_the_coordinator: Dr. Ajitha P S
@@ -83,8 +83,8 @@ cug_number_of_the_principal: 8547005090
 mail_id_of_the_principal: jayankuttichal@gmail.com
 mobile_number_of_the_principal_whatsapp_number: 9946771044
 ug_courses_and_intake : 
-1.DCA -40 
-2.PGDCA
+1.DCA -40 ,
+2.PGDCA,
 3.Data Entry Techniques & Office Automation
 ----------------------------------------
 the_institution_district: Malappuram
@@ -92,7 +92,7 @@ institution_belongs_to_the_group_of: Technical Higher Secodary Schools
 name_of_the_institution_full_name: THSS Vattamkulam
 institution_code: 11081
 institution_address_with_pin_code: THSS VATTAMKULAM NELLISSERY .P.O.SUKAPURAM , MALAPPURAM DT,PIN 679576
-institution_phone_no_land_line: 4942681498
+institution_phone_no_land_line: 04942681498
 institution_email: thssvk@gmail.com
 institution_website_url: thssvattankulam.ihrd.ac.in
 name_of_the_principal: Gisha Thankachi M S
@@ -115,11 +115,9 @@ name_of_the_principal: Mahesh P
 cug_number_of_the_principal: 8547005031
 mail_id_of_the_principal: Maheshpavangat@gmail.com
 mobile_number_of_the_principal_whatsapp_number: 9447885352
-ug_courses_and_intake : 1 Integrated science 100 (higher seconday)
+ug_courses_and_intake : 
+1 Integrated science 100 (higher seconday),
 2 Physical science 100
-pg_courses_and_intake : 0
-details_of_research_centre: 0
-details_of_funded_projects_in_last_4_year_completed_ongoing: 0
 university_board_of_affiliation: DHSE
 name_of_the_coordinator: Sunila M
 mobile_number_of_the_coordinator_whatsapp_number: 919447396772
@@ -129,7 +127,7 @@ linkedin_profile_link: thssthiruthiyad.ihrd@gmail.com
 instagram_profile_link: https://www.instagram.com/thssclt/
 youtube_channel_link: https://www.youtube.com/@THSSCLT
 percentage_of_students_who_opted_for_higher_studies_in_the_previous_academic_year: 95
-using_mla_fund_details: 80 lakhs from kozhikode north MLA Sri A Pradeep kumar. Construction of lobby, cafeteria, store etc
+using_mla_fund_details: 80 lakhs from kozhikode north MLA Sri A Pradeep kumar,Construction of lobby, cafeteria, store etc
 using_plan_fund_details: Two class rooms 25 lakhs, 3 class rooms 48 lakhs
 ----------------------------------------
 the_institution_district: Pathanamthitta
@@ -144,51 +142,41 @@ name_of_the_principal: Dr.K Santhosh Babu
 cug_number_of_the_principal: 8547005045
 mail_id_of_the_principal: santhoshbabukollam@gmail.com
 mobile_number_of_the_principal_whatsapp_number: 8921379224
-ug_courses_and_intake : BSc. Computer Science - 40
-BCA - 40
-BSc. Electronics - 40
-B.Com with Computer Application - 50
-BBA - 40
-BA English and Communicative English - 30
-pg_courses_and_intake : MSc. Computer Science - 12
-MSc.Electronics - 24
-M.Com Finance - 10
-details_of_research_centre: 0
-details_of_funded_projects_in_last_4_year_completed_ongoing: Solar Panel Installation Technician Course (NBCFDC)
-KASE - Womens Training
-K- DISC - OLOI
-PMVKY (Ongoing)
+ug_courses_and_intake : 
+1.BSc. Computer Science - 40,
+2.BCA - 40,
+3.BSc. Electronics - 40,
+4.B.Com with Computer Application - 50,
+5.BBA - 40,
+6.BA English and Communicative English - 30
+pg_courses_and_intake : 
+1.MSc. Computer Science - 12,
+2.MSc.Electronics - 24,
+3.M.Com Finance - 10
+details_of_funded_projects_in_last_4_year_completed_ongoing: 
+1.Solar Panel Installation Technician Course (NBCFDC),
+2.KASE - Womens Training,
+3.K- DISC - OLOI,
+4.PMVKY (Ongoing)
 university_board_of_affiliation: University of Kerala
 name_of_the_coordinator: Sri. Vinod V Rajendran
 mobile_number_of_the_coordinator_whatsapp_number: 9447457458
 mail_id_of_the_coordinator: vinodvrajendran@gmail.com
-facebook_profile_link: 0
-linkedin_profile_link: 0
-instagram_profile_link: 0
-youtube_channel_link: 0
-any_other_details: 0
-if_yes_name_and_address_of_industry_companies_in_campus: 0
 earn_while_you_learn_initiatives_implemented: Yes
 if_yes_details: K DISC - OLOI
 YIP 4.0 State level Winners - 4
 status_of_2_f: Yes
-naac_nba_accreditation_details: 0
 national_state_university_level_achievements_e_g_nirf_ranking_kirf: KIRF 2024 - Rank Band 101-150
 percentage_of_placement_in_previous_academic_year: 0.12
 percentage_of_students_who_opted_for_higher_studies_in_the_previous_academic_year: 0.58
-using_mla_fund_details: 0
-using_mp_fund_details: 0
-using_plan_fund_details: 0
 using_other_funds_details: 1. 2022 -2023 Girls Toilet IHRD Fund - 20 Lakhs
-if_yes_details1: 0
 any_startup_initiatives: Yes
 if_yes_details_1: LED Star Making, LED Bulb Making
 details_of_skill_centre_implemented_for_fyugp_students : College of Applied Science Adoor
-details_of_mou_signed_with_industry_institution : NSS College Pandalam
-St. Cyril's College Adoor
+details_of_mou_signed_with_industry_institution :
+NSS College Pandalam,
+St. Cyril's College Adoor,
 Mar Chrysostam College Paranthal Adoor
-details_of_internship_provided_by_the_institution: 0
-any_other_information: 0
 ----------------------------------------
 the_institution_district: Alappuzha
 institution_belongs_to_the_group_of: Applied Science Colleges
@@ -243,8 +231,7 @@ name_of_the_principal: HELENA LAUREN L
 cug_number_of_the_principal: 8547005033
 mail_id_of_the_principal: helena246417@gmail.com
 mobile_number_of_the_principal_whatsapp_number: 8903928077
-ug_courses_and_intake : BSc Computer Science (Honours) -40
-BCA (Honours) - 40
+ug_courses_and_intake : BSc Computer Science (Honours) -40 , BCA (Honours) - 40
 university_board_of_affiliation: Mahatma Gandhi University
 name_of_the_coordinator: NISHA N NAIR
 mobile_number_of_the_coordinator_whatsapp_number: 8078423891
@@ -261,8 +248,7 @@ institution_belongs_to_the_group_of: Applied Science Colleges
 name_of_the_institution_full_name: College of Applied Science, Ayalur
 institution_code: 43309
 institution_address_with_pin_code: College of Applied Science, Ayalur
-Ayalur (po)
-678510
+Ayalur (po) 678510
 institution_phone_no_land_line: 241766
 institution_email: casayalur@gmail.com
 institution_website_url: casayalur.ihrd.ac.in
@@ -270,8 +256,9 @@ name_of_the_principal: Dally John
 cug_number_of_the_principal: 5847005029
 mail_id_of_the_principal: dalyjose100@gmail.com
 mobile_number_of_the_principal_whatsapp_number: 9446748043
-ug_courses_and_intake : 1. B.Sc Computer Science - 24
-2. B.Com with Computer Application - 40
+ug_courses_and_intake : 
+1. B.Sc Computer Science - 24,
+2. B.Com with Computer Application - 40,
 pg_courses_and_intake : M.Sc Computer Science - 10
 university_board_of_affiliation: Calicut University
 name_of_the_coordinator: Anit Sebi
