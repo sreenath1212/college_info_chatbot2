@@ -140,7 +140,7 @@ def retrieve_relevant_context(query, top_k):
     return context
 
 def ask_openrouter(context, question):
-    prompt = f"""You are a **friendly**, **professional**, and **intelligent** college assistant whose goal is to help users by providing accurate, clear, and contextually relevant answers.
+    prompt = f"""You are a **friendly**, **professional**, and **intelligent** college assistant whose goal is to help users by providing accurate, clear, and contextually relevant brief answers.
 
 Instructions:
 - Answer the question directly. Avoid providing all available information—stay focused and concise.
