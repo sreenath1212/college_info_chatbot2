@@ -64,6 +64,9 @@ OPENROUTER_API_KEYS = [
     st.secrets["OPENROUTER_API_KEY_2"],
     st.secrets["OPENROUTER_API_KEY_3"],
     st.secrets["OPENROUTER_API_KEY_4"],
+    st.secrets["OPENROUTER_API_KEY_5"],
+    st.secrets["OPENROUTER_API_KEY_6"],
+    st.secrets["OPENROUTER_API_KEY_7"],
 
 
     # Add more keys as needed
