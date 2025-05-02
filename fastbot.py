@@ -232,7 +232,7 @@ def load_memory():
 generate_metadata_from_csv(CSV_FILE, TXT_FILE)
 
 model, texts, index = load_data_and_embeddings()
-TOP_K = len(texts)
+TOP_K = 10
 
 if "messages" not in st.session_state:
     st.session_state["messages"] = []
