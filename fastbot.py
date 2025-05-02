@@ -145,6 +145,9 @@ def ask_openrouter(context, question):
 Instructions:
 - Answer **only what the user has asked for**. Do **not include related or additional information** unless it is directly requested.
 - Answer the question directly. Avoid providing all available information—stay focused and concise.
+- - **Never mention data that is missing, marked as 'Nil', or indicates something is not available**.
+    - For example: If a college does **not** have an incubation center, do **not mention it at all**.
+    - This applies to all fields — incubation centers, courses, startups, etc.
 - Ensure every response is **clear**, **accurate**, and **reliable**, demonstrating **intelligent reasoning** that builds user trust.
 - When the question involves institutions, IHRD centers, or specific college details:
     - Clearly **separate** information related to schools and IHRD centers.
