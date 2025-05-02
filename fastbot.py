@@ -1,3 +1,4 @@
+import csv
 import re
 import multiprocessing
 from multiprocessing import Pool
@@ -56,20 +57,18 @@ st.markdown("""
 # (Continue your main application logic from here)
 
 # --- Configuration ---
-TXT_FILE = 'cleaned_output.txt'
+CSV_FILE = 'standardized_finatdata.csv'
+TXT_FILE = 'institution_descriptions.txt'
 OPENROUTER_API_KEYS = [
     st.secrets["OPENROUTER_API_KEY_1"],
     st.secrets["OPENROUTER_API_KEY_2"],
     st.secrets["OPENROUTER_API_KEY_3"],
     st.secrets["OPENROUTER_API_KEY_4"],
-    st.secrets["OPENROUTER_API_KEY_5"],
+
+
     # Add more keys as needed
 ]
-MODEL ='google/gemini-2.0-flash-exp:free'
-#'mistralai/mistral-small-3.1-24b-instruct:free'
-#'deepseek/deepseek-v3-base:free'
-#'meta-llama/llama-4-scout:free'
-
+MODEL = 'google/gemini-2.0-flash-exp:free'
 
 if "api_key_index" not in st.session_state:
     st.session_state["api_key_index"] = 0
@@ -80,6 +79,40 @@ def clean_field_name(field_name):
     field_name = field_name.replace('_', ' ').replace('\n', ' ').strip().capitalize()
     field_name = re.sub(' +', ' ', field_name)
     return field_name
+
+def process_row(row):
+    description = ""
+    institution_name = row.get('Institution_Name', '').strip()
+    if institution_name:
+        description += f"{institution_name}."
+    else:
+        description += "Institution Name: Not Available."
+
+    for field_name, field_value in row.items():
+        if not field_value:
+            continue
+        field_value = field_value.strip()
+        if field_value.lower() in ['n', 'no', 'Nil']:
+            continue
+        if field_name != 'Institution_Name':
+            clean_name = clean_field_name(field_name)
+            description += f" {clean_name}: {field_value}."
+
+    return description.strip()
+
+def generate_metadata_from_csv(csv_filepath, output_txt_path, num_workers=None):
+    if os.path.exists(output_txt_path):
+        return
+
+    with open(csv_filepath, 'r', encoding='utf-8') as csvfile:
+        reader = list(csv.DictReader(csvfile))
+
+    with Pool(processes=num_workers or multiprocessing.cpu_count()) as pool:
+        paragraphs = pool.map(process_row, reader)
+
+    with open(output_txt_path, 'w', encoding='utf-8') as outfile:
+        for paragraph in paragraphs:
+            outfile.write(paragraph + '\n' + '-' * 40 + '\n')
 
 @st.cache_resource
 def load_data_and_embeddings():
@@ -102,29 +135,34 @@ def retrieve_relevant_context(query, top_k):
     return context
 
 def ask_openrouter(context, question):
-    prompt = f"""
-    You are a friendly and helpful assistant. You are given a CONTEXT with data about colleges in Kerala. Each record is separated by '----------------------'.
+    prompt = f"""You are a **friendly**, **professional**, and **intelligent** college assistant designed to help users with detailed, accurate, and thoughtful answers.
 
-    Your goal is to respond to the USER QUESTION naturally, like you're talking to a student. Do not explain your reasoning or mention any filters. Do not include phrases like "Institution type", "The question asks", "Here's a list of...". Just answer clearly and nicely.
+- Provide **clear, accurate**, and **reliable** information for all user queries. Your responses should reflect **intelligent reasoning**, ensuring that the user feels confident in the answers provided.
+- When responding to queries about institutions, IHRD centers, or specific college details:
+    - **Separate** the information about schools and IHRD centers and provide **detailed and relevant** information about each.
+    - Avoid unnecessary repetition or combining the details, but be comprehensive and informative.
+    - If information is unavailable or marked as "Nil," **avoid mentioning it** .
+    -You must **expand abbreviations** commonly used in college names or groups. For example:
+        - IHRD → Institute of Human Resources Development
+        - CAS → College of Applied Science
+        - BSc → Bachelor of Science
+        - BCA → Bachelor of Computer Applications
+         - cs → Computer science
+       
+    - Provide meaningful context, such as "The college has an intake of 40 students for the BSc Computer Science program" .
+    - If a field is marked as "Nil," do not include it in the answer. 
+    - When the user asks for **route map information** (e.g., nearest bus stations, railway stations, or landmarks), provide that information **intelligently** without revealing that the data is from an external source. Always ensure the information you provide is **accurate**.
+- Ensure the answer is in complete sentences and written in a conversational, yet professional, manner.
+- At the end of each response, kindly offer further assistance or ask if the user needs help with anything else. Avoid asking after initial greetings like "hi".
 
-    When applicable:
-    - List matching colleges in a clean and friendly format.
-    - Include name, district, intake capacity for the requested course, and contact info.
-    - Skip unrelated records or courses.
-    - Never mention 'context', 'filters', or 'records'.
-    - If no match found, reply politely that nothing is available.
-
-    ---
+**Your goal is to provide information in an intelligent, accurate, and contextually relevant way.** Avoid vague or incomplete responses and ensure you maintain professionalism at all times.
+    CONTEXT:
+    {context}
 
     USER QUESTION:
     {question}
 
-    CONTEXT:
-    {context}
-
-    Your Answer:
-    """
-
+    Answer:"""
 
     current_api_key_index = st.session_state["api_key_index"]
     current_api_key = OPENROUTER_API_KEYS[current_api_key_index]
@@ -149,14 +187,14 @@ def ask_openrouter(context, question):
         else:
             if "rate limit" in str(data).lower() or "quota" in str(data).lower():
                 st.session_state["api_key_index"] = (current_api_key_index + 1) % len(OPENROUTER_API_KEYS)
-                return ask_openrouter(context, question)
+                return ask_openrouter(context, question)  
             else:
                 return f"❌ OpenRouter error: {data}"
 
     except Exception as e:
         if "rate limit" in str(e).lower() or "quota" in str(e).lower():
             st.session_state["api_key_index"] = (current_api_key_index + 1) % len(OPENROUTER_API_KEYS)
-            return ask_openrouter(context, question)
+            return ask_openrouter(context, question)  
         else:
             return f"❌ Error contacting OpenRouter: {e}"
 
@@ -173,6 +211,8 @@ def load_memory():
             st.session_state["messages"] = json.load(f)
 
 # --- MAIN LOGIC START ---
+
+generate_metadata_from_csv(CSV_FILE, TXT_FILE)
 
 model, texts, index = load_data_and_embeddings()
 TOP_K = len(texts)
